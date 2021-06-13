@@ -8,6 +8,7 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
+        tello.cpp \
         tellocommand.cpp \
         tellostate.cpp
 
@@ -25,5 +26,6 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
+    tello.h \
     tellocommand.h \
     tellostate.h

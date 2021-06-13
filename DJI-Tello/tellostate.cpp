@@ -21,7 +21,6 @@ void TelloState::readState() {
     while (telloStateServer.hasPendingDatagrams()) {
         QNetworkDatagram datagram = telloStateServer.receiveDatagram();
         currentState = datagram.data();
-        //qInfo() << "Drone response: " << datagram.data();
     }
 }
 
