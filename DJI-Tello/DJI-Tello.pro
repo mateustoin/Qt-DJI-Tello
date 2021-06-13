@@ -8,7 +8,8 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        tello_connection.cpp
+        tellocommand.cpp \
+        tellostate.cpp
 
 RESOURCES += qml.qrc
 
@@ -24,4 +25,5 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 HEADERS += \
-    tello_connection.h
+    tellocommand.h \
+    tellostate.h
