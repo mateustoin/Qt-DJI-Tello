@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
-#include <tello_connection.h>
+#include <tellocommand.h>
+#include <tellostate.h>
 #include <QQmlContext>
 
 
@@ -13,9 +14,11 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
 
-    Tello_Connection *tello = new Tello_Connection();
-    engine.setObjectOwnership(tello, QQmlEngine::CppOwnership);
+    TelloCommand *tello = new TelloCommand();
+    TelloState *telloState = new TelloState();
+    //engine.setObjectOwnership(tello, QQmlEngine::CppOwnership);
     engine.rootContext()->setContextProperty("Tello", tello);
+    engine.rootContext()->setContextProperty("TelloState", telloState);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
