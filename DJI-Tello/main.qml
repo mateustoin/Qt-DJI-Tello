@@ -44,7 +44,7 @@ Window {
                 anchors.fill: parent
 
                 onClicked: {
-                    Tello.send_control_command("command");
+                    console.log(Tello.send_control_command("command"));
                 }
             }
         }
