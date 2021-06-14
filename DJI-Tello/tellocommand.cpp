@@ -61,7 +61,7 @@ QString TelloCommand::send_command_with_return(QString command) {
     QDateTime dateTime = QDateTime::currentDateTime();
     telloCommandSocket.writeDatagram(data);
 
-    while (currentResponse == "error") {
+    while (currentResponse != "ok") {
         if (telloCommandSocket.hasPendingDatagrams()) {
             QByteArray response = telloCommandSocket.receiveDatagram().data();
 
@@ -71,8 +71,8 @@ QString TelloCommand::send_command_with_return(QString command) {
                 return "error";
         }
 
-        if (QDateTime::currentDateTime().msecsTo(dateTime)*(-1) > RESPONSE_TIMEOUT*1000) {
-            //qInfo() << "Left with no response from drone";
+        quint16 currentTime = QDateTime::currentDateTime().msecsTo(dateTime)*(-1);
+        if (currentTime > RESPONSE_TIMEOUT) {
             return "error";
         }
 

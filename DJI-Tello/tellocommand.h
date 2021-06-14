@@ -35,7 +35,7 @@ private:
 
     const quint8 REPS = 20;            // 20 tentatives
     const quint8 RETRY_COUNT = 3;      // 3 tentatives
-    const quint8 RESPONSE_TIMEOUT = 2; // 7 seconds
+    const quint16 RESPONSE_TIMEOUT = 2000; // 2 seconds -> 2000 ms
     QByteArray currentResponse;
 
     QThread *responseThread;
