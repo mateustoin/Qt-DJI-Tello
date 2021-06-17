@@ -3,7 +3,9 @@
 #include <tellocommand.h>
 #include <tellostate.h>
 #include <QQmlContext>
+#include "opencv2/opencv.hpp"
 
+using namespace cv;
 
 int main(int argc, char *argv[]) {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -13,6 +15,9 @@ int main(int argc, char *argv[]) {
     QGuiApplication app(argc, argv);
 
     QQmlApplicationEngine engine;
+
+    Mat image = imread("/home/mateus/Imagens/download.png");
+    imshow("Output", image);
 
     TelloCommand *tello = new TelloCommand();
     TelloState *telloState = new TelloState();

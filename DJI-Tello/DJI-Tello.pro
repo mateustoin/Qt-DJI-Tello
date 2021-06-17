@@ -29,3 +29,8 @@ HEADERS += \
     tello.h \
     tellocommand.h \
     tellostate.h
+
+DISTFILES += \
+    opencv/opencv.pri
+
+include(opencv/opencv.pri)
