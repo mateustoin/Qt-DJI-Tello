@@ -7,6 +7,7 @@
 #include <QNetworkDatagram>
 #include <QDateTime>
 #include <QThread>
+#include <QTimer>
 
 class TelloCommand : public QObject {
     Q_OBJECT
@@ -38,7 +39,9 @@ private:
     const quint16 RESPONSE_TIMEOUT = 2000; // 2 seconds -> 2000 ms
     QByteArray currentResponse;
 
-    QThread *responseThread;
+    bool telloConnection;
+    QTimer keepAliveTimer;
+    QThread connectedThread;
 };
 
 #endif // TELLOCOMMAND_H
