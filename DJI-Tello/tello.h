@@ -4,6 +4,7 @@
 #include <QObject>
 #include <tellocommand.h>
 #include <tellostate.h>
+#include <tellovideo.h>
 
 class Tello : public QObject
 {
@@ -17,6 +18,7 @@ signals:
 private:
     TelloCommand *tello_command;
     TelloState *tello_state;
+    TelloVideo *tello_video;
 
 };
 

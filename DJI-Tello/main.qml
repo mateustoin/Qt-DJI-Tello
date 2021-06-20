@@ -7,12 +7,13 @@ Window {
     visible: true
     title: qsTr("Hello World")
 
+    property int divisions: 5
     Column{
         anchors.fill: parent
         Rectangle {
             color: "blue"
             width: parent.width
-            height: parent.height/4
+            height: parent.height/divisions
 
             Text {
                 id: connect
@@ -32,7 +33,7 @@ Window {
         Rectangle {
             color: "green"
             width: parent.width
-            height: parent.height/4
+            height: parent.height/divisions
 
             Text {
                 id: command
@@ -52,14 +53,14 @@ Window {
         Rectangle {
             color: "yellow"
             width: parent.width
-            height: parent.height/4
+            height: parent.height/divisions
 
             MouseArea{
                 anchors.fill: parent
 
                 onClicked: {
-                    //Tello.send_control_command(inputName.text);
-                    TelloState.connectStateServer()
+                    Tello.send_control_command(inputName.text);
+                    //TelloState.connectStateServer()
                 }
             }
 
@@ -86,7 +87,7 @@ Window {
         Rectangle {
             color: "gray"
             width: parent.width
-            height: parent.height/4
+            height: parent.height/divisions
 
             Text {
                 id: state
@@ -99,6 +100,26 @@ Window {
 
                 onClicked: {
                     console.log(TelloState.getCurrentState());
+                }
+            }
+        }
+
+        Rectangle {
+            color: "pink"
+            width: parent.width
+            height: parent.height/divisions
+
+            Text {
+                id: video
+                text: qsTr("Start Video")
+                anchors.centerIn: parent
+            }
+
+            MouseArea{
+                anchors.fill: parent
+
+                onClicked: {
+                    console.log(TelloVideo.show_video());
                 }
             }
         }

@@ -10,7 +10,8 @@ SOURCES += \
         main.cpp \
         tello.cpp \
         tellocommand.cpp \
-        tellostate.cpp
+        tellostate.cpp \
+        tellovideo.cpp
 
 RESOURCES += qml.qrc
 
@@ -28,9 +29,20 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     tello.h \
     tellocommand.h \
-    tellostate.h
+    tellostate.h \
+    tellovideo.h
 
-DISTFILES += \
-    opencv/opencv.pri
+win32: {
+    include("c:/dev/opencv/opencv.pri")
+}
 
-include(opencv/opencv.pri)
+unix: !macx {
+    CONFIG += link_pkgconfig
+    PKGCONFIG += opencv
+}
+
+unix: macx {
+    INCLUDEPATH += "/usr/local/include"
+    LIBS += -L"/usr/local/lib" \
+    -lopencv_world
+}
