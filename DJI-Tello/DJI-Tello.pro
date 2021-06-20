@@ -26,6 +26,9 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
+# Including qr code libraries
+include(qzxing/QZXing.pri)
+
 HEADERS += \
     tello.h \
     tellocommand.h \
