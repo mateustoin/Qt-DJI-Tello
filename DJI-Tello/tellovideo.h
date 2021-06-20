@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QDebug>
 #include "opencv2/opencv.hpp"
+
+// https://github.com/ftylitak/qzxing
 #include <QZXing.h>
 
 class TelloVideo : public QObject {
