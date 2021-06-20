@@ -3,7 +3,7 @@
 ## Project goals
 + [ ] Control Tello with keyboard
 + [ ] Save Tello state info in csv file
-+ [ ] Camera visualization¹
++ [x] Camera visualization¹
 + [ ] Autonomous flight configuration
 
 
