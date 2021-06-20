@@ -4,6 +4,9 @@
 #include <tellocommand.h>
 #include <tellostate.h>
 #include <tellovideo.h>
+#include <tello.h>
+
+#include <QThread>
 
 #include <QQmlContext>
 #include "opencv2/opencv.hpp"
@@ -21,10 +24,24 @@ int main(int argc, char *argv[]) {
 
 //    Mat image = imread("/home/mateus/Imagens/download.png");
 //    imshow("Output", image);
+    QThread thread_video, thread_command, thread_state;
 
     TelloCommand *tello = new TelloCommand();
     TelloState *telloState = new TelloState();
     TelloVideo *telloVideo = new TelloVideo();
+
+    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
+    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
+    qInfo() << "TelloState rodando na thread: " << telloState->thread();
+
+    tello->moveToThread(&thread_command);
+    telloState->moveToThread(&thread_state);
+    telloVideo->moveToThread(&thread_video);
+
+    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
+    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
+    qInfo() << "TelloState rodando na thread: " << telloState->thread();
+
     //engine.setObjectOwnership(tello, QQmlEngine::CppOwnership);
     engine.rootContext()->setContextProperty("Tello", tello);
     engine.rootContext()->setContextProperty("TelloState", telloState);

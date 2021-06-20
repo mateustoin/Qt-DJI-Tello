@@ -1,7 +1,6 @@
 #include "tellostate.h"
 
 TelloState::TelloState(QObject *parent) : QObject(parent), statePort(8890), telloStateAddress("0.0.0.0") {
-
 }
 
 TelloState::~TelloState() {

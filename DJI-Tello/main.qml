@@ -9,6 +9,8 @@ Window {
 
     property int divisions: 5
     Column{
+        focus: true
+
         anchors.fill: parent
         Rectangle {
             color: "blue"
@@ -70,7 +72,7 @@ Window {
 
                 width: 100
                 height: 40
-                anchors.centerIn: parent
+                anchors.centerIn: parent  
 
                 TextInput {
                     id: inputName
@@ -80,6 +82,14 @@ Window {
                     anchors.verticalCenter: parent.verticalCenter
                     cursorVisible: false
                     maximumLength: 15
+
+                    Keys.onReturnPressed: {
+                        if (event.key === Qt.Key_Return) {
+                            console.log("Enter pressionado")
+                            Tello.send_control_command(inputName.text);
+                            inputName.clear()
+                        }
+                    }
                 }
             }
         }

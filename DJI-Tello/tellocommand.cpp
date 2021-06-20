@@ -71,7 +71,7 @@ QString TelloCommand::send_command_with_return(QString command) {
     telloCommandSocket.writeDatagram(data);
 
     while (currentResponse != "ok") {
-        if (telloCommandSocket.hasPendingDatagrams()) {
+        while (telloCommandSocket.hasPendingDatagrams()) {
             QByteArray response = telloCommandSocket.receiveDatagram().data();
 
             if (response != "error")
