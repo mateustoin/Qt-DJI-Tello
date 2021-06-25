@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
     qInfo() << "TelloState rodando na thread: " << telloState->thread();
 
     tello->moveToThread(&thread_command);
-    telloState->moveToThread(&thread_state);
+    //telloState->moveToThread(&thread_state);
     telloVideo->moveToThread(&thread_video);
 
     qInfo() << "TelloCommand rodando na thread: " << tello->thread();
