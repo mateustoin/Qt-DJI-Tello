@@ -5,12 +5,6 @@ TelloCommand::TelloCommand(QObject *parent) : QObject(parent), localPort(2020),
                                                                telloAddress("192.168.10.1"),
                                                                currentResponse("")
 {
-//    keepAliveTimer.setInterval(15000);
-//    moveToThread(&connectedThread);
-
-//    connect(&connectedThread, &QThread::started, &keepAliveTimer, &QTimer::start, Qt::QueuedConnection);
-    //connect(&telloCommandSocket, &QUdpSocket::readyRead, this, &TelloCommand::readResponse);
-
     // Try to connect ninding a socket on port 2020
     // If return some error, dosen't connect
     if (!telloCommandSocket.bind(localPort)) {
@@ -62,7 +56,7 @@ void TelloCommand::send_command_without_return(QString command) {
 }
 
 QString TelloCommand::send_command_with_return(QString command) {
-    currentResponse = "error";
+    currentResponse = " ";
 
     QByteArray commandData = command.toLatin1();
     QNetworkDatagram data(commandData, telloAddress, telloCommandPort);
@@ -70,8 +64,8 @@ QString TelloCommand::send_command_with_return(QString command) {
     QDateTime dateTime = QDateTime::currentDateTime();
     telloCommandSocket.writeDatagram(data);
 
-    while (currentResponse != "ok") {
-        while (telloCommandSocket.hasPendingDatagrams()) {
+    while (currentResponse != "error") {
+        if (telloCommandSocket.hasPendingDatagrams()) {
             QByteArray response = telloCommandSocket.receiveDatagram().data();
 
             if (response != "error")
