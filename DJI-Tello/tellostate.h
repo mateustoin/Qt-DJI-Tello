@@ -5,9 +5,9 @@
 #include <QDebug>
 #include <QUdpSocket>
 #include <QNetworkDatagram>
+#include <QHash>
 
-class TelloState : public QObject
-{
+class TelloState : public QObject {
     Q_OBJECT
 public:
     explicit TelloState(QObject *parent = nullptr);
@@ -15,17 +15,41 @@ public:
 
 public slots:
     void connectStateServer();
-    void readState();
-    QString getCurrentState();
+    QString getRawState();
+
+    int get_pitch();
+    int get_roll();
+    int get_yaw();
+    int get_speed_x();
+    int get_speed_y();
+    int get_speed_z();
+    int get_temp_low();
+    int get_temp_high();
+    float get_temp_average();
+    int get_tof();
+    int get_height();
+    int get_battery();
+    float get_barometer();
+    int get_flight_time();
+    float get_acceleration_x();
+    float get_acceleration_y();
+    float get_acceleration_z();
 
 signals:
+    void recievedNewState();
+    void stateTableUpdated();
+
+private slots:
+    void readState();
+    void stateTableConstruction();
 
 private:
     quint16 statePort;
     QHostAddress telloStateAddress;
-    QUdpSocket telloStateServer;
+    QUdpSocket telloStateSocketServer;
 
-    QByteArray currentState;
+    QByteArray currentRawState;
+    QHash <QString, QString> stateTable;
 };
 
 #endif // TELLOSTATE_H
