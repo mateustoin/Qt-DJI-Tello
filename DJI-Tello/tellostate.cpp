@@ -12,10 +12,10 @@ void TelloState::connectStateServer() {
     if (!telloStateSocketServer.bind(telloStateAddress ,statePort)) {
         qInfo() << telloStateSocketServer.errorString();
         return;
-    }else{
-        qInfo() << "Conexão feita!";
+    }else{     
         connect(&telloStateSocketServer, &QUdpSocket::readyRead, this, &TelloState::readState);
         connect(this, &TelloState::recievedNewState, this, &TelloState::stateTableConstruction);
+        emit stateServerStarted();
     }
 }
 
@@ -202,4 +202,23 @@ float TelloState::get_acceleration_z() {
      */
 
     return stateTable["agz"].toFloat();
+}
+
+void TelloState::stateTester() {
+    qInfo() << "Pitch: " << get_pitch()
+            << " Roll: " << get_roll() <<
+               " Yaw: " << get_yaw() <<
+               " Speed x: " << get_speed_x() <<
+               " Speed y: " << get_speed_y() <<
+               " Speed z: " << get_speed_z() <<
+               " templ: " << get_temp_low() <<
+               " temph: " << get_temp_high() <<
+               " tof: " << get_tof() <<
+               " height" << get_height() <<
+               " battery: " << get_battery() <<
+               " Barometer: " << get_barometer() <<
+               " Flight Time: " << get_flight_time() <<
+               " AccX: " << get_acceleration_x() <<
+               " AccY: " << get_acceleration_y() <<
+               " AccZ" << get_acceleration_z();
 }

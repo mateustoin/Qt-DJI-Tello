@@ -5,7 +5,15 @@ Window {
     width: 640
     height: 480
     visible: true
-    title: qsTr("Hello World")
+    title: qsTr("Tello Drone Control")
+
+    Timer{
+        id: commandTimer
+        interval: 15000
+        repeat: true
+
+        onTriggered: Tello.send_control_command("command")
+    }
 
     property int divisions: 5
     Column{
@@ -27,7 +35,11 @@ Window {
                 anchors.fill: parent
 
                 onClicked: {
-                    Tello.connect_tello();
+                    if (Tello.send_control_command("command")){
+                        commandTimer.running = true;
+                    } else {
+                        console.log("Drone not connected");
+                    }
                 }
             }
         }
@@ -39,7 +51,7 @@ Window {
 
             Text {
                 id: command
-                text: qsTr("Send command: 'command'")
+                text: qsTr("Connect State Server")
                 anchors.centerIn: parent
             }
 
@@ -47,7 +59,7 @@ Window {
                 anchors.fill: parent
 
                 onClicked: {
-                    console.log(Tello.send_control_command("command"));
+                    TelloState.connectStateServer();
                 }
             }
         }
@@ -109,7 +121,7 @@ Window {
                 anchors.fill: parent
 
                 onClicked: {
-                    console.log(TelloState.getCurrentState());
+                    TelloState.stateTester();
                 }
             }
         }

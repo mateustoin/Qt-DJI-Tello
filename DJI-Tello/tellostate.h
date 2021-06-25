@@ -34,8 +34,10 @@ public slots:
     float get_acceleration_x();
     float get_acceleration_y();
     float get_acceleration_z();
+    void stateTester();
 
 signals:
+    void stateServerStarted();
     void recievedNewState();
     void stateTableUpdated();
 
