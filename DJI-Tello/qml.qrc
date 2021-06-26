@@ -4,5 +4,6 @@
         <file>ControlPage.qml</file>
         <file>NavigationFoot.qml</file>
         <file>StatePage.qml</file>
+        <file>TestPage.qml</file>
     </qresource>
 </RCC>

@@ -15,4 +15,10 @@ TabBar {
 
         //onClicked: swipeView.setCurrentIndex(1)
     }
+
+    TabButton{
+        text: qsTr("Grid test")
+
+        //onClicked: swipeView.setCurrentIndex(1)
+    }
 }
