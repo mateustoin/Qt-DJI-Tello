@@ -1,5 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>ControlPage.qml</file>
+        <file>NavigationFoot.qml</file>
+        <file>StatePage.qml</file>
     </qresource>
 </RCC>

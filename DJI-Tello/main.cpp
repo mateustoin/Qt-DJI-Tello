@@ -22,8 +22,6 @@ int main(int argc, char *argv[]) {
 
     QQmlApplicationEngine engine;
 
-//    Mat image = imread("/home/mateus/Imagens/download.png");
-//    imshow("Output", image);
     QThread thread_video, thread_command, thread_state;
 
     TelloCommand *tello = new TelloCommand();
