@@ -8,7 +8,8 @@ Page {
         id: mainLayout1
         anchors.fill: parent
         focus: true
-
+        columnSpacing: 0
+        rowSpacing: 0
         rows: 3
         columns: 3
 

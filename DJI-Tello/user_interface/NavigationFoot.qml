@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 
 TabBar {
     width: parent.width
+    currentIndex: swipeView.currentIndex
 
     TabButton{
         text: qsTr("Drone Control")

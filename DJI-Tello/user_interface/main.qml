@@ -27,6 +27,5 @@ ApplicationWindow {
 
     footer: NavigationFoot {
                 id: navigationBar
-                currentIndex: swipeView.currentIndex
             }
 }

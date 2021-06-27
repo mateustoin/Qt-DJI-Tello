@@ -14,7 +14,6 @@ Page {
 
     GridLayout {
         id: mainLayout1
-        anchors.fill: parent
         focus: true
 
         columnSpacing: 2
@@ -23,8 +22,8 @@ Page {
         rows: 4
         columns: 6
 
-        property double colWidth: width/columns
-        property double rowHeight: height/rows
+        property double colWidth: parent.width/columns
+        property double rowHeight: parent.height/rows
 
         function prefWidth(item){
             return ((colWidth * item.Layout.columnSpan) + (columnSpacing * (item.Layout.columnSpan-1)))
@@ -137,7 +136,7 @@ Page {
 
                 onClicked: {
                     TelloState.connectStateServer();
-                    statusTimer.start();
+                    //statusTimer.start();
                 }
             }
         }
