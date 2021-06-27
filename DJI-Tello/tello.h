@@ -25,9 +25,6 @@ private:
     TelloCommand *tello_command;
     TelloState *tello_state;
     TelloVideo *tello_video;
-
-
-
 };
 
 #endif // TELLO_H
