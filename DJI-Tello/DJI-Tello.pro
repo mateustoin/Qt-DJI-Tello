@@ -7,6 +7,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        third_operations/framedecoder.cpp \
         main.cpp \
         tello.cpp \
         tellocommand.cpp \
@@ -30,6 +31,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 include(qzxing/QZXing.pri)
 
 HEADERS += \
+    third_operations/framedecoder.h \
     tello.h \
     tellocommand.h \
     tellostate.h \
