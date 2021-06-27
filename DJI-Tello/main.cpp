@@ -9,7 +9,6 @@
 #include <QThread>
 
 #include <QQmlContext>
-#include "opencv2/opencv.hpp"
 
 using namespace cv;
 
@@ -45,7 +44,7 @@ int main(int argc, char *argv[]) {
     engine.rootContext()->setContextProperty("TelloState", telloState);
     engine.rootContext()->setContextProperty("TelloVideo", telloVideo);
 
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/user_interface/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

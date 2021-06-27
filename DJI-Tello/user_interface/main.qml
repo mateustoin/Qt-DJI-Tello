@@ -14,18 +14,15 @@ ApplicationWindow {
         currentIndex: navigationBar.currentIndex
         anchors.fill: parent
 
-        ControlPage {
+        ControlPage{
             id: controlPage
         }
 
-        StatePage {
+        StatePage{
             id: statePage
         }
 
-        TestPage{
-
-
-        }
+        TestPage{ }
     }
 
     footer: NavigationFoot {
