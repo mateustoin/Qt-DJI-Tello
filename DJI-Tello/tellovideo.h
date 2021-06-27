@@ -4,9 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include "opencv2/opencv.hpp"
-
-// https://github.com/ftylitak/qzxing
-#include <QZXing.h>
+#include <third_operations/framedecoder.h>
 
 class TelloVideo : public QObject {
     Q_OBJECT
@@ -20,8 +18,16 @@ public slots:
 private:
     bool showScreen;
     cv::VideoCapture *cap;
-signals:
+    cv::Mat currentOpencvFrame;
+    FrameDecoder decoder;
+    QString videoUdpURL;
 
+    quint32 frameCounter;
+
+signals:
+    void videoCantOpen();
+    void videoClosed();
+    void videoOpened();
 };
 
 #endif // TELLOVIDEO_H

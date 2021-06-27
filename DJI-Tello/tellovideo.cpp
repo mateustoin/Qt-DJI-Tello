@@ -1,52 +1,49 @@
 #include "tellovideo.h"
 
-TelloVideo::TelloVideo(QObject *parent) : QObject(parent), showScreen(true) {
+TelloVideo::TelloVideo(QObject *parent) : QObject(parent), videoUdpURL("udp://@0.0.0.0:11111"),
+                                                           frameCounter(0){
     cap = new cv::VideoCapture();
 }
 
 TelloVideo::~TelloVideo() {
-    qInfo() << "Video closed";
+    cv::destroyAllWindows();
+    cap->release();
+    delete cap;
 }
 
 void TelloVideo::show_video() {
-    QZXing decoder;
-    QImage img;
-    //decoder.setDecoder( QZXing::DecoderFormat_QR_CODE | QZXing::DecoderFormat_EAN_13 );
-    decoder.setDecoder( QZXing::DecoderFormat_CODE_128);
-    decoder.setSourceFilterType(QZXing::SourceFilter_ImageNormal);
-    decoder.setTryHarderBehaviour(QZXing::TryHarderBehaviour_ThoroughScanning | QZXing::TryHarderBehaviour_Rotate);
-
-    cap->open("udp://@0.0.0.0:11111", cv::CAP_GSTREAMER);
-    cv::Mat frame;
+    cap->open(videoUdpURL.toStdString(), cv::CAP_GSTREAMER);
     cv::namedWindow("Tello Video", CV_WINDOW_AUTOSIZE);
-    quint32 counter = 0;
+    qInfo() << "Video iniciando rodando na thread: " << this->thread();
     if (!cap->isOpened()) {  // if not success, exit program
         qInfo() << "Capture not open";
-        this->showScreen = false;
+        emit videoCantOpen();
     }else{
-        while (this->showScreen) {
-            cap->read(frame);
+        emit videoOpened();
 
-            if (counter%20 == 0){
-                img = QImage((uchar*) frame.data, frame.cols, frame.rows, frame.step, QImage::Format_RGB888);
+        while (cap->isOpened()) {
+            cap->read(currentOpencvFrame);
+
+            QString result = "";
+            if (frameCounter%20 == 0){
+                 result = decoder.decodeFrame(currentOpencvFrame);
+
+                 if (result != ""){
+                     qInfo() << "Result(" << frameCounter << "): " << result;
+                 }
             }
 
-            QString result = decoder.decodeImage(img);
-            if (result != ""){
-                qInfo() << "Result(" << counter << "): " << result;
-            }
-
-            imshow("Tello Video", frame);
+            imshow("Tello Video", currentOpencvFrame);
             if (cv::waitKey(30) == 27) { //wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
-                //this->showScreen = false;
                 cv::destroyAllWindows();
                 cap->release();
-                qInfo() << "esc key is pressed by user";
+                qInfo() << "ESC key is pressed by user";
+                frameCounter = 0;
                 break;
-                //exit(0);
             }
-            img = QImage();
-            counter++;
+            frameCounter++;
         }
+
+        emit videoClosed();
     }
 }
