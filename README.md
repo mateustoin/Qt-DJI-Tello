@@ -1,6 +1,8 @@
-# Qt-DJI-Tello
+# Control interface to DJI Tello
 
-## Project goals
+## Features
+
+## ToDo
 + [ ] Control Tello with keyboard
 + [ ] Save Tello state info in csv file
 + [x] Camera visualization¹

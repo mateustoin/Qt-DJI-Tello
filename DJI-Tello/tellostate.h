@@ -7,6 +7,8 @@
 #include <QNetworkDatagram>
 #include <QHash>
 
+#include <third_operations/csvhandler.h>
+
 class TelloState : public QObject {
     Q_OBJECT
 public:
@@ -16,6 +18,7 @@ public:
 public slots:
     void connectStateServer();
     QString getRawState();
+    void finishCsvCollect();
 
     int get_pitch();
     int get_roll();
@@ -52,6 +55,8 @@ private:
 
     QByteArray currentRawState;
     QHash <QString, QString> stateTable;
+
+    CsvHandler csv;
 };
 
 #endif // TELLOSTATE_H

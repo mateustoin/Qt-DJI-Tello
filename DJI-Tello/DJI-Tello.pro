@@ -7,6 +7,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        third_operations/csvhandler.cpp \
         third_operations/framedecoder.cpp \
         main.cpp \
         tello.cpp \
@@ -27,10 +28,15 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-# Including qr code libraries
+# Including QrCode libraries
 include(qzxing/QZXing.pri)
 
+# Including CSV Handler library
+# https://github.com/iamantony/qtcsv
+include(qtcsv/qtcsv.pri)
+
 HEADERS += \
+    third_operations/csvhandler.h \
     third_operations/framedecoder.h \
     tello.h \
     tellocommand.h \

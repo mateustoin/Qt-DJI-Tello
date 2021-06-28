@@ -235,6 +235,12 @@ Page {
             Layout.rowSpan: 1
             Layout.preferredWidth: mainLayout1.prefWidth(this)
             Layout.preferredHeight: mainLayout1.prefHeight(this)
+
+            MouseArea{
+                anchors.fill: parent
+
+                onClicked: TelloState.finishCsvCollect()
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 #include "tellostate.h"
 
 TelloState::TelloState(QObject *parent) : QObject(parent), statePort(8890), telloStateAddress("0.0.0.0") {
-
+    //connect(this, &TelloState::stateTableUpdated, &csv, &CsvHandler::collectData);
 }
 
 TelloState::~TelloState() {
@@ -15,6 +15,7 @@ void TelloState::connectStateServer() {
     }else{     
         connect(&telloStateSocketServer, &QUdpSocket::readyRead, this, &TelloState::readState);
         connect(this, &TelloState::recievedNewState, this, &TelloState::stateTableConstruction);
+        csv.startDataCollect();
         emit stateServerStarted();
     }
 }
@@ -29,6 +30,10 @@ void TelloState::readState() {
 
 QString TelloState::getRawState() {
     return currentRawState;
+}
+
+void TelloState::finishCsvCollect() {
+    csv.finishDataCollect();
 }
 
 void TelloState::stateTableConstruction() {
@@ -46,6 +51,8 @@ void TelloState::stateTableConstruction() {
         const QList<QByteArray> itemSeparation = stateItem.split(':');
         stateTable[itemSeparation[0]] = itemSeparation[1];
     }
+
+    csv.collectData(stateTable);
     emit stateTableUpdated();
 }
 
