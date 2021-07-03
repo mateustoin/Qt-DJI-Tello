@@ -20,5 +20,5 @@ Tello::~Tello() {
 
 void Tello::show_video()
 {
-    tello_video->show_video();
+    tello_video->startVideoStream();
 }

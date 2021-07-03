@@ -5,13 +5,7 @@ TelloCommand::TelloCommand(QObject *parent) : QObject(parent), localPort(2020),
                                                                telloAddress("192.168.10.1"),
                                                                currentResponse("")
 {
-    // Try to connect ninding a socket on port 2020
-    // If return some error, dosen't connect
-    if (!telloCommandSocket.bind(localPort)) {
-        qInfo() << telloCommandSocket.errorString();
-    }else{
-        qInfo() << "Local bind ready on " << telloCommandSocket.localAddress() << ":" << telloCommandSocket.localPort();
-    }
+    startCommandConfig();
 }
 
 TelloCommand::~TelloCommand() {
@@ -21,15 +15,15 @@ TelloCommand::~TelloCommand() {
 void TelloCommand::connect_tello() {
     telloConnection = send_control_command("command");
 
-    if (telloConnection) {
-
-    }
+    if (telloConnection)
+        emit connectionWithTelloEstablished();
+    else
+        emit connectionWithTelloFailed();
 }
 
 void TelloCommand::readResponse() {
     while (telloCommandSocket.hasPendingDatagrams()) {
         QNetworkDatagram datagram = telloCommandSocket.receiveDatagram();
-        qInfo() << "Drone response: " << datagram.data();
         currentResponse = datagram.data();
     }
 }
@@ -83,4 +77,14 @@ QString TelloCommand::send_command_with_return(QString command) {
     }
 
     return currentResponse;
+}
+
+void TelloCommand::startCommandConfig() {
+    // Try to connect ninding a socket on port 2020
+    // If return some error, dosen't connect
+    if (!telloCommandSocket.bind(localPort)) {
+        qInfo() << telloCommandSocket.errorString();
+    }else{
+        qInfo() << "Local bind ready on " << telloCommandSocket.localAddress() << ":" << telloCommandSocket.localPort();
+    }
 }
