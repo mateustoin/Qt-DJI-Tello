@@ -180,7 +180,7 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    console.log(TelloVideo.show_video());
+                    console.log(TelloVideo.startVideoStream());
                 }
             }
         }

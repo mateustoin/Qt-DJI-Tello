@@ -16,30 +16,30 @@ Page {
         property double colWidth: width/columns
         property double rowHeight: height/rows
 
-        Connections{
-            target: TelloState
+//        Connections{
+//            target: TelloState
 
-            function onStateTableUpdated() {
-                var battery = TelloState.get_battery();
-                var temperature = TelloState.get_temp_average();
-                var tof = TelloState.get_tof();
-                var pitch = TelloState.get_pitch();
-                var roll = TelloState.get_roll();
-                var yaw = TelloState.get_yaw();
-                var accx = TelloState.get_acceleration_x();
-                var accy = TelloState.get_acceleration_y();
-                var accz = TelloState.get_acceleration_z();
-                batteryText.text = "Battery: \n" + battery.toString() + "%";
-                temperatureText.text = "Temperature: \n" + temperature.toString() + "ºC";
-                tofText.text = "TOF: \n" + tof.toString() + "cm";
-                pitchText.text = "Pitch: \n" + pitch.toString() + "º";
-                rollText.text = "Roll: \n" + roll.toString() + "º";
-                yawText.text = "Yaw: \n" + yaw.toString() + "º";
-                accXText.text = "Acceleration X: \n" + accx.toString();
-                accYText.text = "Acceleration Y: \n" + accy.toString();
-                accZText.text = "Acceleration Z: \n" + accz.toString();
-            }
-        }
+//            function onStateTableUpdated() {
+//                var battery = TelloState.get_battery();
+//                var temperature = TelloState.get_temp_average();
+//                var tof = TelloState.get_tof();
+//                var pitch = TelloState.get_pitch();
+//                var roll = TelloState.get_roll();
+//                var yaw = TelloState.get_yaw();
+//                var accx = TelloState.get_acceleration_x();
+//                var accy = TelloState.get_acceleration_y();
+//                var accz = TelloState.get_acceleration_z();
+//                batteryText.text = "Battery: \n" + battery.toString() + "%";
+//                temperatureText.text = "Temperature: \n" + temperature.toString() + "ºC";
+//                tofText.text = "TOF: \n" + tof.toString() + "cm";
+//                pitchText.text = "Pitch: \n" + pitch.toString() + "º";
+//                rollText.text = "Roll: \n" + roll.toString() + "º";
+//                yawText.text = "Yaw: \n" + yaw.toString() + "º";
+//                accXText.text = "Acceleration X: \n" + accx.toString();
+//                accYText.text = "Acceleration Y: \n" + accy.toString();
+//                accZText.text = "Acceleration Z: \n" + accz.toString();
+//            }
+//        }
 
         function prefWidth(item){
             return ((colWidth * item.Layout.columnSpan) + (columnSpacing * (item.Layout.columnSpan-1)))

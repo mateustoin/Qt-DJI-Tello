@@ -1,49 +1,74 @@
 #include "tellovideo.h"
 
-TelloVideo::TelloVideo(QObject *parent) : QObject(parent), videoUdpURL("udp://@0.0.0.0:11111"),
+TelloVideo::TelloVideo(QObject *parent) : QObject(parent), captureOpened(false),
+                                                           videoUdpURL("udp://@0.0.0.0:11111"),
                                                            frameCounter(0){
-    cap = new cv::VideoCapture();
+    videoCapture = new cv::VideoCapture();
 }
 
 TelloVideo::~TelloVideo() {
     cv::destroyAllWindows();
-    cap->release();
-    delete cap;
+    videoCapture->release();
+    delete videoCapture;
 }
 
-void TelloVideo::show_video() {
-    cap->open(videoUdpURL.toStdString(), cv::CAP_GSTREAMER);
-    cv::namedWindow("Tello Video", CV_WINDOW_AUTOSIZE);
-    qInfo() << "Video iniciando rodando na thread: " << this->thread();
-    if (!cap->isOpened()) {  // if not success, exit program
-        qInfo() << "Capture not open";
-        emit videoCantOpen();
-    }else{
-        emit videoOpened();
+void TelloVideo::startVideoStream() {
+    if (startVideoConfig()){
+        processVideoLoop();
+    }
+}
 
-        while (cap->isOpened()) {
-            cap->read(currentOpencvFrame);
-
-            QString result = "";
-            if (frameCounter%20 == 0){
-                 result = decoder.decodeFrame(currentOpencvFrame);
-
-                 if (result != ""){
-                     qInfo() << "Result(" << frameCounter << "): " << result;
-                 }
-            }
-
-            imshow("Tello Video", currentOpencvFrame);
-            if (cv::waitKey(30) == 27) { //wait for 'esc' key press for 30ms. If 'esc' key is pressed, break loop
-                cv::destroyAllWindows();
-                cap->release();
-                qInfo() << "ESC key is pressed by user";
-                frameCounter = 0;
-                break;
-            }
-            frameCounter++;
-        }
-
+void TelloVideo::escapeKeyPressed() {
+    /*
+     * Wait for 'esc' key press for 30ms. If 'esc' key is
+     * pressed, close everything related to video stream.
+     */
+    if (cv::waitKey(30) == 27) {
+        cv::destroyAllWindows();
+        captureOpened = false;
+        videoCapture->release();
+        frameCounter = 0;
         emit videoClosed();
+    }
+}
+
+void TelloVideo::getDecodeResultEveryNoFrames(int no_frames) {
+    /*
+     * Every no_frames frames try to decode image and get the results
+     */
+
+    QString result = "";
+    if (frameCounter%no_frames == 0){
+         result = decoder.decodeFrame(currentOpencvFrame);
+
+         if (result != ""){
+             emit newDecodeResult(result);
+         }
+    }
+    frameCounter++;
+}
+
+bool TelloVideo::startVideoConfig() {
+    videoCapture->open(videoUdpURL.toStdString(), cv::CAP_GSTREAMER);
+    cv::namedWindow("Tello Video", CV_WINDOW_AUTOSIZE);
+
+    if (!videoCapture->isOpened()) {
+        captureOpened = false;
+        emit videoCantOpen();
+        return false;
+    }else{
+        captureOpened = true;
+        emit videoOpened();
+        return true;
+    }
+}
+
+void TelloVideo::processVideoLoop() {
+    while (captureOpened) {
+        videoCapture->read(currentOpencvFrame);
+        imshow("Tello Video", currentOpencvFrame);
+
+        getDecodeResultEveryNoFrames(20);
+        escapeKeyPressed();
     }
 }

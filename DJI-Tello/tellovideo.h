@@ -13,11 +13,17 @@ public:
     ~TelloVideo();
 
 public slots:
-    void show_video();
+    void startVideoStream();
+
+private slots:
+    void escapeKeyPressed();
+    void getDecodeResultEveryNoFrames(int);
+    bool startVideoConfig();
+    void processVideoLoop();
 
 private:
-    bool showScreen;
-    cv::VideoCapture *cap;
+    bool captureOpened;
+    cv::VideoCapture *videoCapture;
     cv::Mat currentOpencvFrame;
     FrameDecoder decoder;
     QString videoUdpURL;
@@ -28,6 +34,7 @@ signals:
     void videoCantOpen();
     void videoClosed();
     void videoOpened();
+    void newDecodeResult(QString);
 };
 
 #endif // TELLOVIDEO_H
