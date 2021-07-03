@@ -42,7 +42,7 @@ public slots:
 signals:
     void stateServerStarted();
     void recievedNewState();
-    void stateTableUpdated();
+    void stateTableUpdated(QHash<QString, QString>);
 
 private slots:
     void readState();

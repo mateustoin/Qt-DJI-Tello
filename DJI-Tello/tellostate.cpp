@@ -12,10 +12,11 @@ void TelloState::connectStateServer() {
     if (!telloStateSocketServer.bind(telloStateAddress ,statePort)) {
         qInfo() << telloStateSocketServer.errorString();
         return;
-    }else{     
+    }else{
         connect(&telloStateSocketServer, &QUdpSocket::readyRead, this, &TelloState::readState);
         connect(this, &TelloState::recievedNewState, this, &TelloState::stateTableConstruction);
         csv.startDataCollect();
+        connect(this, &TelloState::stateTableUpdated, &csv, &CsvHandler::collectData);
         emit stateServerStarted();
     }
 }
@@ -52,8 +53,8 @@ void TelloState::stateTableConstruction() {
         stateTable[itemSeparation[0]] = itemSeparation[1];
     }
 
-    csv.collectData(stateTable);
-    emit stateTableUpdated();
+    //csv.collectData(stateTable);
+    emit stateTableUpdated(stateTable);
 }
 
 int TelloState::get_pitch() {
