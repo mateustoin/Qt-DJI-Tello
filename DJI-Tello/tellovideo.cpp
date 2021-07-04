@@ -1,4 +1,7 @@
 #include "tellovideo.h"
+#include <QQmlEngine>
+
+TelloVideo* TelloVideo::m_pThis = nullptr;
 
 TelloVideo::TelloVideo(QObject *parent) : QObject(parent), captureOpened(false),
                                                            videoUdpURL("udp://@0.0.0.0:11111"),
@@ -72,3 +75,17 @@ void TelloVideo::processVideoLoop() {
         escapeKeyPressed();
     }
 }
+
+TelloVideo *TelloVideo::instance() {
+    if (m_pThis == nullptr) // avoid creation of new instances
+        m_pThis = new TelloVideo;
+    return m_pThis;
+}
+
+QObject *TelloVideo::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine) {
+    Q_UNUSED(engine);
+    Q_UNUSED(scriptEngine);
+    // C++ and QML instance they are the same instance
+    return TelloVideo::instance();
+}
+

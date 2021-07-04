@@ -8,16 +8,21 @@
 #include <QDateTime>
 #include <QThread>
 
+class QQmlEngine;
+class QJSEngine;
+
 class TelloCommand : public QObject {
     Q_OBJECT
 public:
-    explicit TelloCommand(QObject *parent = nullptr);
     ~TelloCommand();
+
+    static TelloCommand *instance();
+    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
 
 public:
 
 public slots:
-    void connect_tello();
+    void connectTello();
     void readResponse();
 
     bool send_control_command(QString);
@@ -26,11 +31,17 @@ public slots:
 
 private slots:
     void startCommandConfig();
+    bool sendCommandWithRetry(QString);
 
 signals:
     void connectionWithTelloEstablished();
     void connectionWithTelloFailed();
+    void connectionWithSocketFailed();
+
 private:
+    explicit TelloCommand(QObject *parent = nullptr);
+    static TelloCommand* m_pThis;
+
     quint16 localPort;
     quint16 telloCommandPort;
     QHostAddress telloAddress;

@@ -6,10 +6,14 @@
 #include "opencv2/opencv.hpp"
 #include <third_operations/framedecoder.h>
 
+class QQmlEngine;
+class QJSEngine;
+
 class TelloVideo : public QObject {
     Q_OBJECT
 public:
-    explicit TelloVideo(QObject *parent = nullptr);
+    static TelloVideo *instance();
+    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
     ~TelloVideo();
 
 public slots:
@@ -22,6 +26,9 @@ private slots:
     void processVideoLoop();
 
 private:
+    explicit TelloVideo(QObject *parent = nullptr);
+    static TelloVideo* m_pThis;
+
     bool captureOpened;
     cv::VideoCapture *videoCapture;
     cv::Mat currentOpencvFrame;

@@ -7,7 +7,6 @@
 #include <tello.h>
 
 #include <QThread>
-
 #include <QQmlContext>
 
 int main(int argc, char *argv[]) {
@@ -21,16 +20,22 @@ int main(int argc, char *argv[]) {
 
     QThread thread_video, thread_command, thread_state;
 
-    TelloCommand *tello = new TelloCommand();
-    TelloState *telloState = new TelloState();
-    TelloVideo *telloVideo = new TelloVideo();
+    TelloCommand *tello = TelloCommand::instance();
+    TelloState *telloState = TelloState::instance();
+    TelloVideo *telloVideo = TelloVideo::instance();
+//    Tello *telo1 = Tello::instance();
+//    telo1->setObjectName("Telo1Aqui");
+//    Tello *telo2 = Tello::instance();
+
+//    qInfo() << "Telo1 address: " << telo1;
+//    qInfo() << "Telo2 address: " << telo2;
 
     qInfo() << "TelloCommand rodando na thread: " << tello->thread();
     qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
     qInfo() << "TelloState rodando na thread: " << telloState->thread();
 
-    tello->moveToThread(&thread_command);
-    //telloState->moveToThread(&thread_state);
+    //tello->moveToThread(&thread_command);
+    telloState->moveToThread(&thread_state);
     telloVideo->moveToThread(&thread_video);
 
     qInfo() << "TelloCommand rodando na thread: " << tello->thread();

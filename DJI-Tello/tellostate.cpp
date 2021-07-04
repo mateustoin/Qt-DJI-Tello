@@ -1,6 +1,11 @@
 #include "tellostate.h"
+#include <QQmlEngine>
 
-TelloState::TelloState(QObject *parent) : QObject(parent), statePort(8890), telloStateAddress("0.0.0.0") {
+TelloState* TelloState::m_pThis = nullptr;
+
+TelloState::TelloState(QObject *parent) : QObject(parent),
+                                          statePort(8890),
+                                          telloStateAddress("0.0.0.0") {
     //connect(this, &TelloState::stateTableUpdated, &csv, &CsvHandler::collectData);
 }
 
@@ -229,4 +234,17 @@ void TelloState::stateTester() {
                " AccX: " << get_acceleration_x() <<
                " AccY: " << get_acceleration_y() <<
                " AccZ" << get_acceleration_z();
+}
+
+TelloState *TelloState::instance() {
+    if (m_pThis == nullptr) // avoid creation of new instances
+        m_pThis = new TelloState;
+    return m_pThis;
+}
+
+QObject *TelloState::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine) {
+    Q_UNUSED(engine);
+    Q_UNUSED(scriptEngine);
+    // C++ and QML instance they are the same instance
+    return TelloState::instance();
 }

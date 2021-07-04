@@ -12,6 +12,20 @@ Page {
         onTriggered: Tello.send_control_command("command")
     }
 
+    Connections{
+        target: Tello
+
+        function onConnectionWithTelloEstablished(){
+            connRectangle.color = "green";
+            commandTimer.running = true;
+        }
+
+        function onConnectionWithTelloFailed(){
+            connRectangle.color = "red";
+            console.log("Drone not connected!");
+        }
+    }
+
     GridLayout {
         id: mainLayout1
         focus: true
@@ -93,6 +107,7 @@ Page {
         }
 
         Rectangle {
+            id: connRectangle
             color: "blue"
             Layout.columnSpan: 3
             Layout.rowSpan: 1
@@ -109,11 +124,7 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    if (Tello.send_control_command("command")){
-                        commandTimer.running = true;
-                    } else {
-                        console.log("Drone not connected");
-                    }
+                    Tello.connectTello()
                 }
             }
         }

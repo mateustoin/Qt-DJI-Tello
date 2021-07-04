@@ -9,10 +9,14 @@
 
 #include <third_operations/csvhandler.h>
 
+class QQmlEngine;
+class QJSEngine;
+
 class TelloState : public QObject {
     Q_OBJECT
 public:
-    explicit TelloState(QObject *parent = nullptr);
+    static TelloState *instance();
+    static QObject *qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine);
     ~TelloState();
 
 public slots:
@@ -49,6 +53,9 @@ private slots:
     void stateTableConstruction();
 
 private:
+    explicit TelloState(QObject *parent = nullptr);
+    static TelloState* m_pThis;
+
     quint16 statePort;
     QHostAddress telloStateAddress;
     QUdpSocket telloStateSocketServer;
