@@ -1,21 +1,19 @@
-#include "tellocommand.h"
-#include <QQmlEngine>
+#include "src/include/worker/tellocommandworker.h"
 
-TelloCommand* TelloCommand::m_pThis = nullptr;
-
-TelloCommand::TelloCommand(QObject *parent) : QObject(parent), localPort(2020),
-                                                               telloCommandPort(8889),
-                                                               telloAddress("192.168.10.1"),
-                                                               currentResponse("")
+TelloCommandWorker::TelloCommandWorker(QObject *parent) : QObject(parent),
+                                                          localPort(2020),
+                                                          telloCommandPort(8889),
+                                                          telloAddress("192.168.10.1"),
+                                                          currentResponse("")
 {
-    //startCommandConfig();
+    startCommandConfig();
 }
 
-TelloCommand::~TelloCommand() {
+TelloCommandWorker::~TelloCommandWorker() {
     telloCommandSocket.close();
 }
 
-void TelloCommand::connectTello() {
+void TelloCommandWorker::connectTello() {
     telloConnection = send_control_command("command");
 
     if (telloConnection)
@@ -24,28 +22,28 @@ void TelloCommand::connectTello() {
         emit connectionWithTelloFailed();
 }
 
-void TelloCommand::readResponse() {
+void TelloCommandWorker::readResponse() {
     while (telloCommandSocket.hasPendingDatagrams()) {
         QNetworkDatagram datagram = telloCommandSocket.receiveDatagram();
         currentResponse = datagram.data();
     }
 }
 
-bool TelloCommand::send_control_command(QString command) {
+bool TelloCommandWorker::send_control_command(QString command) {
     QByteArray commandData = command.toLatin1();
     QNetworkDatagram data(commandData, telloAddress, telloCommandPort);
 
     return sendCommandWithRetry(command);
 }
 
-void TelloCommand::send_command_without_return(QString command) {
+void TelloCommandWorker::send_command_without_return(QString command) {
     // Sending command to tello without worrying about response
     QByteArray commandData = command.toLatin1();
     QNetworkDatagram data(commandData, telloAddress, telloCommandPort);
     telloCommandSocket.writeDatagram(data);
 }
 
-QString TelloCommand::send_command_with_return(QString command) {
+QString TelloCommandWorker::send_command_with_return(QString command) {
     currentResponse = " ";
 
     QByteArray commandData = command.toLatin1();
@@ -69,17 +67,18 @@ QString TelloCommand::send_command_with_return(QString command) {
             return "error";
         }
 
-        QThread::msleep(10);
+        //QThread::msleep(10);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
     return currentResponse;
 }
 
-void TelloCommand::startCommandConfig() {
+void TelloCommandWorker::startCommandConfig() {
     /*
-     * Try to connect a socket on port 2020
-     * If return some error, print error msg
-     */
+    * Try to connect a socket on port 2020
+    * If return some error, print error msg
+    */
 
     if (!telloCommandSocket.bind(localPort)) {
         emit connectionWithSocketFailed();
@@ -89,7 +88,7 @@ void TelloCommand::startCommandConfig() {
     }
 }
 
-bool TelloCommand::sendCommandWithRetry(QString command) {
+bool TelloCommandWorker::sendCommandWithRetry(QString command) {
     QString response = "";
     for (int i=0; i<RETRY_COUNT; i++) {
         response = send_command_with_return(command);
@@ -99,17 +98,4 @@ bool TelloCommand::sendCommandWithRetry(QString command) {
         }
     }
     return false;
-}
-
-TelloCommand *TelloCommand::instance() {
-    if (m_pThis == nullptr) // avoid creation of new instances
-        m_pThis = new TelloCommand;
-    return m_pThis;
-}
-
-QObject *TelloCommand::qmlInstance(QQmlEngine *engine, QJSEngine *scriptEngine) {
-    Q_UNUSED(engine);
-    Q_UNUSED(scriptEngine);
-    // C++ and QML instance they are the same instance
-    return TelloCommand::instance();
 }

@@ -6,6 +6,8 @@
 #include <tellovideo.h>
 #include <tello.h>
 
+#include <src/include/controller/tellocommandcontroller.h>
+
 #include <QThread>
 #include <QQmlContext>
 
@@ -20,34 +22,29 @@ int main(int argc, char *argv[]) {
 
     QThread thread_video, thread_command, thread_state;
 
-    TelloCommand *tello = TelloCommand::instance();
+    //TelloCommand *tello = TelloCommand::instance();
     TelloState *telloState = TelloState::instance();
     TelloVideo *telloVideo = TelloVideo::instance();
-//    Tello *telo1 = Tello::instance();
-//    telo1->setObjectName("Telo1Aqui");
-//    Tello *telo2 = Tello::instance();
 
-//    qInfo() << "Telo1 address: " << telo1;
-//    qInfo() << "Telo2 address: " << telo2;
+    TelloCommandController *telloCommand = new TelloCommandController;
+//    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
+//    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
+//    qInfo() << "TelloState rodando na thread: " << telloState->thread();
 
-    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
-    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
-    qInfo() << "TelloState rodando na thread: " << telloState->thread();
+//    tello->moveToThread(&thread_command);
+//    telloState->moveToThread(&thread_state);
+//    telloVideo->moveToThread(&thread_video);
 
-    //tello->moveToThread(&thread_command);
-    telloState->moveToThread(&thread_state);
-    telloVideo->moveToThread(&thread_video);
-
-    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
-    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
-    qInfo() << "TelloState rodando na thread: " << telloState->thread();
+//    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
+//    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
+//    qInfo() << "TelloState rodando na thread: " << telloState->thread();
 
     //engine.setObjectOwnership(tello, QQmlEngine::CppOwnership);
-    engine.rootContext()->setContextProperty("Tello", tello);
+    engine.rootContext()->setContextProperty("Tello", telloCommand);
     engine.rootContext()->setContextProperty("TelloState", telloState);
     engine.rootContext()->setContextProperty("TelloVideo", telloVideo);
 
-    const QUrl url(QStringLiteral("qrc:/user_interface/main.qml"));
+    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)

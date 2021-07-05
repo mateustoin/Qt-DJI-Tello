@@ -7,7 +7,7 @@
 #include <QNetworkDatagram>
 #include <QHash>
 
-#include <third_operations/csvhandler.h>
+#include <src/include/third_operation/csvhandler.h>
 
 class QQmlEngine;
 class QJSEngine;
@@ -22,6 +22,7 @@ public:
 public slots:
     void connectStateServer();
     QString getRawState();
+    QHash<QString, QString> getStateHashTable();
     void finishCsvCollect();
 
     int get_pitch();

@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QDebug>
 #include "opencv2/opencv.hpp"
-#include <third_operations/framedecoder.h>
+#include <src/include/third_operation/framedecoder.h>
 
 class QQmlEngine;
 class QJSEngine;

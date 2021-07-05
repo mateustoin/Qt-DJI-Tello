@@ -38,6 +38,10 @@ QString TelloState::getRawState() {
     return currentRawState;
 }
 
+QHash<QString, QString> TelloState::getStateHashTable() {
+    return stateTable;
+}
+
 void TelloState::finishCsvCollect() {
     csv.finishDataCollect();
 }
