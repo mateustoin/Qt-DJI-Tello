@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/">
-        <file>user_interface/main.qml</file>
-        <file>user_interface/ControlPage.qml</file>
-        <file>user_interface/NavigationFoot.qml</file>
-        <file>user_interface/StatePage.qml</file>
-        <file>user_interface/TestPage.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/ControlPage.qml</file>
+        <file>qml/NavigationFoot.qml</file>
+        <file>qml/StatePage.qml</file>
+        <file>qml/TestPage.qml</file>
     </qresource>
 </RCC>

@@ -9,22 +9,23 @@ Page {
         interval: 15000
         repeat: true
 
-        onTriggered: Tello.send_control_command("command")
+        //onTriggered: Tello.send_control_command("command")
+        onTriggered: Tello.sendCommandToDrone("command")
     }
 
-    Connections{
-        target: Tello
+//    Connections{
+//        target: Tello
 
-        function onConnectionWithTelloEstablished(){
-            connRectangle.color = "green";
-            commandTimer.running = true;
-        }
+//        function onConnectionWithTelloEstablished(){
+//            connRectangle.color = "green";
+//            commandTimer.running = true;
+//        }
 
-        function onConnectionWithTelloFailed(){
-            connRectangle.color = "red";
-            console.log("Drone not connected!");
-        }
-    }
+//        function onConnectionWithTelloFailed(){
+//            connRectangle.color = "red";
+//            console.log("Drone not connected!");
+//        }
+//    }
 
     GridLayout {
         id: mainLayout1
@@ -124,7 +125,8 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    Tello.connectTello()
+                    //Tello.connectTello()
+                    Tello.sendCommandToDrone("command");
                 }
             }
         }
@@ -169,7 +171,8 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    console.log(Tello.send_control_command("streamon"));
+                    //console.log(Tello.send_control_command("streamon"));
+                    Tello.sendCommandToDrone("streamon");
                 }
             }
         }
@@ -207,8 +210,8 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    Tello.send_control_command(inputName.text);
-                    //TelloState.connectStateServer()
+                    //Tello.send_control_command(inputName.text);
+                    Tello.sendCommandToDrone(inputName.text);
                 }
             }
 
@@ -232,7 +235,8 @@ Page {
                     Keys.onReturnPressed: {
                         if (event.key === Qt.Key_Return) {
                             console.log("Enter pressionado")
-                            Tello.send_control_command(inputName.text);
+                            //Tello.send_control_command(inputName.text);
+                            Tello.sendCommandToDrone(inputName.text);
                             inputName.clear()
                         }
                     }
