@@ -42,6 +42,7 @@ include(external/qzxing/QZXing.pri)
 include(external/qtcsv/qtcsv.pri)
 
 HEADERS += \
+    TelloEnumTypes.h \
     src/include/third_operation/csvhandler.h \
     src/include/third_operation/framedecoder.h \
     tello.h \

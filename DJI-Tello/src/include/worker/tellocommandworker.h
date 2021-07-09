@@ -7,6 +7,7 @@
 #include <QNetworkDatagram>
 #include <QDateTime>
 #include <QThread>
+#include <TelloEnumTypes.h>
 
 class TelloCommandWorker : public QObject {
     Q_OBJECT
@@ -28,6 +29,8 @@ private slots:
     bool sendCommandWithRetry(QString);
 
 signals:
+    void alertSignal(TelloAlerts);
+    void responseSignal(TelloResponse, QString);
     void connectionWithTelloEstablished();
     void connectionWithTelloFailed();
     void connectionWithSocketFailed();
@@ -37,7 +40,7 @@ private:
     quint16 localPort;
     quint16 telloCommandPort;
     QHostAddress telloAddress;
-    QUdpSocket telloCommandSocket;
+    QUdpSocket *telloCommandSocket = nullptr;
 
     const quint8 REPS = 20;            // 20 tentatives
     const quint8 RETRY_COUNT = 3;      // 3 tentatives

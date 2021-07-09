@@ -6,25 +6,27 @@ TelloCommandWorker::TelloCommandWorker(QObject *parent) : QObject(parent),
                                                           telloAddress("192.168.10.1"),
                                                           currentResponse("")
 {
-    startCommandConfig();
+    //startCommandConfig();
 }
 
 TelloCommandWorker::~TelloCommandWorker() {
-    telloCommandSocket.close();
+    telloCommandSocket->close();
 }
 
 void TelloCommandWorker::connectTello() {
     telloConnection = send_control_command("command");
 
     if (telloConnection)
-        emit connectionWithTelloEstablished();
+        emit alertSignal(TelloAlerts::TELLO_CONNECTION_ESTABLISHED);
+        //emit connectionWithTelloEstablished();
     else
-        emit connectionWithTelloFailed();
+        emit alertSignal(TelloAlerts::TELLO_CONNECTION_FAILED);
+        //emit connectionWithTelloFailed();
 }
 
 void TelloCommandWorker::readResponse() {
-    while (telloCommandSocket.hasPendingDatagrams()) {
-        QNetworkDatagram datagram = telloCommandSocket.receiveDatagram();
+    while (telloCommandSocket->hasPendingDatagrams()) {
+        QNetworkDatagram datagram = telloCommandSocket->receiveDatagram();
         currentResponse = datagram.data();
     }
 }
@@ -40,7 +42,7 @@ void TelloCommandWorker::send_command_without_return(QString command) {
     // Sending command to tello without worrying about response
     QByteArray commandData = command.toLatin1();
     QNetworkDatagram data(commandData, telloAddress, telloCommandPort);
-    telloCommandSocket.writeDatagram(data);
+    telloCommandSocket->writeDatagram(data);
 }
 
 QString TelloCommandWorker::send_command_with_return(QString command) {
@@ -50,16 +52,19 @@ QString TelloCommandWorker::send_command_with_return(QString command) {
     QNetworkDatagram data(commandData, telloAddress, telloCommandPort);
 
     QDateTime dateTime = QDateTime::currentDateTime();
-    telloCommandSocket.writeDatagram(data);
+    telloCommandSocket->writeDatagram(data);
 
     while (currentResponse != "error") {
-        if (telloCommandSocket.hasPendingDatagrams()) {
-            QByteArray response = telloCommandSocket.receiveDatagram().data();
+        if (telloCommandSocket->hasPendingDatagrams()) {
+            QByteArray response = telloCommandSocket->receiveDatagram().data();
 
-            if (response != "error")
+            if (response != "error"){
+                emit responseSignal(TelloResponse::OK, response);
                 return response;
-            else
+            }else{
+                emit responseSignal(TelloResponse::ERROR, response);
                 return "error";
+            }
         }
 
         quint16 currentTime = QDateTime::currentDateTime().msecsTo(dateTime)*(-1);
@@ -79,12 +84,13 @@ void TelloCommandWorker::startCommandConfig() {
     * Try to connect a socket on port 2020
     * If return some error, print error msg
     */
-
-    if (!telloCommandSocket.bind(localPort)) {
-        emit connectionWithSocketFailed();
-        qInfo() << telloCommandSocket.errorString();
+    telloCommandSocket = new QUdpSocket();
+    if (!telloCommandSocket->bind(localPort)) {
+        //emit connectionWithSocketFailed();
+        emit alertSignal(TelloAlerts::SOCKET_CONNECTION_FAILED);
+        qInfo() << telloCommandSocket->errorString();
     }else{
-        qInfo() << "Local bind ready on " << telloCommandSocket.localAddress() << ":" << telloCommandSocket.localPort();
+        qInfo() << "Local bind ready on " << telloCommandSocket->localAddress() << ":" << telloCommandSocket->localPort();
     }
 }
 
@@ -93,7 +99,8 @@ bool TelloCommandWorker::sendCommandWithRetry(QString command) {
     for (int i=0; i<RETRY_COUNT; i++) {
         response = send_command_with_return(command);
         if (response != "error") {
-            qInfo() << "Response: " << response;
+            //emit readyCommandResponse(response);
+            //qInfo() << "Response: " << response;
             return true;
         }
     }

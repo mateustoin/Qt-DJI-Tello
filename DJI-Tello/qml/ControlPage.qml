@@ -10,22 +10,22 @@ Page {
         repeat: true
 
         //onTriggered: Tello.send_control_command("command")
-        onTriggered: Tello.sendCommandToDrone("command")
+        onTriggered: Tello.sendCommand("command")
     }
 
-//    Connections{
-//        target: Tello
+    Connections{
+        target: Tello
 
-//        function onConnectionWithTelloEstablished(){
-//            connRectangle.color = "green";
-//            commandTimer.running = true;
-//        }
+        function onConnectionWithTelloEstablished(){
+            connRectangle.color = "green";
+            //commandTimer.running = true;
+        }
 
-//        function onConnectionWithTelloFailed(){
-//            connRectangle.color = "red";
-//            console.log("Drone not connected!");
-//        }
-//    }
+        function onConnectionWithTelloFailed(){
+            connRectangle.color = "red";
+            console.log("Drone not connected!");
+        }
+    }
 
     GridLayout {
         id: mainLayout1
@@ -126,7 +126,8 @@ Page {
 
                 onClicked: {
                     //Tello.connectTello()
-                    Tello.sendCommandToDrone("command");
+                    //commandTimer.start()
+                    Tello.sendCommand("command");
                 }
             }
         }
@@ -172,7 +173,7 @@ Page {
 
                 onClicked: {
                     //console.log(Tello.send_control_command("streamon"));
-                    Tello.sendCommandToDrone("streamon");
+                    Tello.sendCommand("streamon");
                 }
             }
         }
@@ -211,7 +212,7 @@ Page {
 
                 onClicked: {
                     //Tello.send_control_command(inputName.text);
-                    Tello.sendCommandToDrone(inputName.text);
+                    Tello.sendCommand(inputName.text);
                 }
             }
 
@@ -234,9 +235,8 @@ Page {
 
                     Keys.onReturnPressed: {
                         if (event.key === Qt.Key_Return) {
-                            console.log("Enter pressionado")
-                            //Tello.send_control_command(inputName.text);
-                            Tello.sendCommandToDrone(inputName.text);
+                            //console.log("Enter pressionado")
+                            Tello.sendCommand(inputName.text);
                             inputName.clear()
                         }
                     }
