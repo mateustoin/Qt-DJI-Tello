@@ -2,9 +2,11 @@
 #define TELLOENUMTYPES_H
 
 enum class TelloResponse {
-    OK,
-    ERROR,
-    VALUE
+    OK,                 // Answear positive
+    ERROR,              // Answear negative
+    VALUE,              // Answear positive with value return
+    ERROR_NOT_JOYSTICK, // Wait untill send next command
+    ERROR_NO_VALID_IMU, // Maybe had some changes on room light
 };
 
 enum class TelloAlerts {
