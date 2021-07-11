@@ -4,6 +4,7 @@
 #include <QObject>
 #include <TelloEnumTypes.h>
 #include <src/include/worker/tellocommandworker.h>
+#include <QQueue>
 
 Q_DECLARE_METATYPE(TelloResponse)
 Q_DECLARE_METATYPE(TelloAlerts)
@@ -16,16 +17,22 @@ public:
     ~TelloCommandController();
 
 private slots:
+    void start();
+
     void processAlertSignal(TelloAlerts);
     void processResponseSignal(TelloResponse, QString);
 
+    void defineIntentOfCommand();
+    void verifyErrorMatchResponse(QString);
+    void verifyOkMatchResponse(QString);
+    void verifyValueMatchResponse(QString);
+
 public slots:
     void printCommandResult(QString);
-    void start();
-    void sendCommandToDrone(QString);
+    void sendCommand(QString);
 
 signals:
-    void sendCommand(QString);
+    void sendCommandToWorker(QString);
 
     void connectionWithTelloEstablished();
     void connectionWithTelloFailed();
@@ -34,6 +41,10 @@ signals:
 private:
     QThread commandWorkerThread;
     TelloCommandWorker *commandWorker;
+
+    QString currentCommand;
+    //QPair<QString, TelloResponse> commandPair;
+    QQueue<QString> commandQueue;
 };
 
 #endif // TELLOCOMMANDCONTROLLER_H

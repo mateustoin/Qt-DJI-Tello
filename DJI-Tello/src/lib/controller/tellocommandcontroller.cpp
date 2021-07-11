@@ -5,7 +5,7 @@ TelloCommandController::TelloCommandController(QObject *parent) : QObject(parent
     commandWorker->moveToThread(&commandWorkerThread);
 //    connect(commandWorker, &TelloCommandWorker::readyCommandResponse,
 //            this, &TelloCommandController::printCommandResult, Qt::QueuedConnection);
-    connect(this, &TelloCommandController::sendCommand,
+    connect(this, &TelloCommandController::sendCommandToWorker,
             commandWorker, &TelloCommandWorker::send_control_command, Qt::QueuedConnection);
     connect(&commandWorkerThread, &QThread::started,
             commandWorker, &TelloCommandWorker::startCommandConfig, Qt::QueuedConnection);
@@ -45,17 +45,53 @@ void TelloCommandController::processAlertSignal(TelloAlerts alert) {
 void TelloCommandController::processResponseSignal(TelloResponse alert, QString response) {
     switch (alert) {
         case TelloResponse::ERROR:
-            qInfo() << "Erro na resposta: " << response;
+            //qInfo() << "Erro na resposta: " << response;
+            verifyErrorMatchResponse(response);
             break;
 
         case TelloResponse::OK:
-            qInfo() << "Okay na resposta: " << response;
-            emit connectionWithTelloEstablished();
+            //qInfo() << "Okay na resposta: " << response;
+            verifyOkMatchResponse(response);
             break;
 
         case TelloResponse::VALUE:
-            qInfo() << "Valor na resposta: " << response;
+            //qInfo() << "Valor na resposta: " << response;
+            verifyValueMatchResponse(response);
             break;
+        case TelloResponse::ERROR_NOT_JOYSTICK:
+            qInfo() << "Comando sendo enviado muito rápido. Esperar e tentar de novo!";
+            break;
+    }
+}
+
+void TelloCommandController::defineIntentOfCommand() {
+
+}
+
+void TelloCommandController::verifyErrorMatchResponse(QString response) {
+    if (currentCommand == ""){
+        qInfo() << "Error on command response";
+    }else{
+        qInfo() << "Command sent[" << this->currentCommand << "]: " << response;
+        this->currentCommand = "";
+    }
+}
+
+void TelloCommandController::verifyOkMatchResponse(QString response) {
+    if (currentCommand == ""){
+        qInfo() << "Error on command response";
+    }else{
+        qInfo() << "Command sent[" << this->currentCommand << "]: " << response;
+        this->currentCommand = "";
+    }
+}
+
+void TelloCommandController::verifyValueMatchResponse(QString response) {
+    if (currentCommand == ""){
+        qInfo() << "Error on command response";
+    }else{
+        qInfo() << "Command sent[" << this->currentCommand << "]: " << response;
+        this->currentCommand = "";
     }
 }
 
@@ -67,6 +103,7 @@ void TelloCommandController::start() {
     commandWorkerThread.start();
 }
 
-void TelloCommandController::sendCommandToDrone(QString command) {
-    emit sendCommand(command);
+void TelloCommandController::sendCommand(QString command) {
+    this->currentCommand = command;
+    emit sendCommandToWorker(command);
 }
