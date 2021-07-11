@@ -9,7 +9,6 @@ Page {
         interval: 15000
         repeat: true
 
-        //onTriggered: Tello.send_control_command("command")
         onTriggered: Tello.sendCommand("command")
     }
 

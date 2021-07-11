@@ -31,9 +31,6 @@ private slots:
 signals:
     void alertSignal(TelloAlerts);
     void responseSignal(TelloResponse, QString);
-    void connectionWithTelloEstablished();
-    void connectionWithTelloFailed();
-    void connectionWithSocketFailed();
     void readyCommandResponse(QString);
 
 private:

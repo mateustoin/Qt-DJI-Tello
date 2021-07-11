@@ -6,7 +6,6 @@ TelloCommandWorker::TelloCommandWorker(QObject *parent) : QObject(parent),
                                                           telloAddress("192.168.10.1"),
                                                           currentResponse("")
 {
-    //startCommandConfig();
 }
 
 TelloCommandWorker::~TelloCommandWorker() {
@@ -18,10 +17,8 @@ void TelloCommandWorker::connectTello() {
 
     if (telloConnection)
         emit alertSignal(TelloAlerts::TELLO_CONNECTION_ESTABLISHED);
-        //emit connectionWithTelloEstablished();
     else
         emit alertSignal(TelloAlerts::TELLO_CONNECTION_FAILED);
-        //emit connectionWithTelloFailed();
 }
 
 void TelloCommandWorker::readResponse() {
@@ -55,24 +52,21 @@ QString TelloCommandWorker::send_command_with_return(QString command) {
     telloCommandSocket->writeDatagram(data);
 
     while (currentResponse != "error") {
-        if (telloCommandSocket->hasPendingDatagrams()) {
+        while (telloCommandSocket->hasPendingDatagrams()) {
             QByteArray response = telloCommandSocket->receiveDatagram().data();
 
             if (response != "error"){
-                emit responseSignal(TelloResponse::OK, response);
                 return response;
             }else{
-                emit responseSignal(TelloResponse::ERROR, response);
                 return "error";
             }
         }
 
         quint16 currentTime = QDateTime::currentDateTime().msecsTo(dateTime)*(-1);
         if (currentTime > RESPONSE_TIMEOUT) {
-            return "error";
+            return "timeout";
         }
 
-        //QThread::msleep(10);
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
@@ -86,7 +80,6 @@ void TelloCommandWorker::startCommandConfig() {
     */
     telloCommandSocket = new QUdpSocket();
     if (!telloCommandSocket->bind(localPort)) {
-        //emit connectionWithSocketFailed();
         emit alertSignal(TelloAlerts::SOCKET_CONNECTION_FAILED);
         qInfo() << telloCommandSocket->errorString();
     }else{
@@ -98,11 +91,12 @@ bool TelloCommandWorker::sendCommandWithRetry(QString command) {
     QString response = "";
     for (int i=0; i<RETRY_COUNT; i++) {
         response = send_command_with_return(command);
-        if (response != "error") {
-            //emit readyCommandResponse(response);
-            //qInfo() << "Response: " << response;
+        if (response != "error" && response != " ") {
+            emit responseSignal(TelloResponse::OK, response);
             return true;
         }
     }
+
+    emit responseSignal(TelloResponse::ERROR, response);
     return false;
 }
