@@ -12,27 +12,11 @@ TelloCommandWorker::~TelloCommandWorker() {
     telloCommandSocket->close();
 }
 
-void TelloCommandWorker::connectTello() {
-    telloConnection = send_control_command("command");
-
-    if (telloConnection)
-        emit alertSignal(TelloAlerts::TELLO_CONNECTION_ESTABLISHED);
-    else
-        emit alertSignal(TelloAlerts::TELLO_CONNECTION_FAILED);
-}
-
 void TelloCommandWorker::readResponse() {
     while (telloCommandSocket->hasPendingDatagrams()) {
         QNetworkDatagram datagram = telloCommandSocket->receiveDatagram();
         currentResponse = datagram.data();
     }
-}
-
-bool TelloCommandWorker::send_control_command(QString command) {
-    QByteArray commandData = command.toLatin1();
-    QNetworkDatagram data(commandData, telloAddress, telloCommandPort);
-
-    return sendCommandWithRetry(command);
 }
 
 void TelloCommandWorker::send_command_without_return(QString command) {
@@ -51,14 +35,12 @@ QString TelloCommandWorker::send_command_with_return(QString command) {
     QDateTime dateTime = QDateTime::currentDateTime();
     telloCommandSocket->writeDatagram(data);
 
-    while (currentResponse != "error") {
+    while (currentResponse == " ") {
         while (telloCommandSocket->hasPendingDatagrams()) {
             QByteArray response = telloCommandSocket->receiveDatagram().data();
 
-            if (response != "error"){
+            if (response != " "){
                 return response;
-            }else{
-                return "error";
             }
         }
 
@@ -70,7 +52,7 @@ QString TelloCommandWorker::send_command_with_return(QString command) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
-    return currentResponse;
+    return "undefined_behavior";
 }
 
 void TelloCommandWorker::startCommandConfig() {
@@ -87,16 +69,20 @@ void TelloCommandWorker::startCommandConfig() {
     }
 }
 
-bool TelloCommandWorker::sendCommandWithRetry(QString command) {
+void TelloCommandWorker::send_control_command(QString command) {
     QString response = "";
     for (int i=0; i<RETRY_COUNT; i++) {
         response = send_command_with_return(command);
-        if (response != "error" && response != " ") {
+        if ((response == "error" || response == "timeout") && i==2){
+            emit responseSignal(TelloResponse::ERROR, response);
+        }else if (response == "ok"){
             emit responseSignal(TelloResponse::OK, response);
-            return true;
+            break;
+        }else if (response.contains("\r\n")){
+            emit responseSignal(TelloResponse::VALUE, response);
+            break;
+        }else if (i==2){
+            emit responseSignal(TelloResponse::UNDEFINED, response);
         }
     }
-
-    emit responseSignal(TelloResponse::ERROR, response);
-    return false;
 }

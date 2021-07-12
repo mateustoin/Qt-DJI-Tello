@@ -16,17 +16,15 @@ public:
     ~TelloCommandWorker();
 
 public slots:
-    void connectTello();
     void readResponse();
 
-    bool send_control_command(QString);
+    void send_control_command(QString);
     void send_command_without_return(QString);
     QString send_command_with_return(QString);
 
     void startCommandConfig();
 
 private slots:
-    bool sendCommandWithRetry(QString);
 
 signals:
     void alertSignal(TelloAlerts);
