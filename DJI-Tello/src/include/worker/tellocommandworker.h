@@ -8,6 +8,7 @@
 #include <QDateTime>
 #include <QThread>
 #include <TelloEnumTypes.h>
+#include <QTimer>
 
 class TelloCommandWorker : public QObject {
     Q_OBJECT
@@ -25,6 +26,7 @@ public slots:
     void startCommandConfig();
 
 private slots:
+    void triggerSignalBasedOnResponse(QString);
 
 signals:
     void alertSignal(TelloAlerts);
@@ -41,9 +43,6 @@ private:
     const quint8 RETRY_COUNT = 3;      // 3 tentatives
     const quint16 RESPONSE_TIMEOUT = 1000; // 1 second -> 1000 ms
     QByteArray currentResponse;
-
-    bool telloConnection;
-    QThread connectedThread;
 };
 
 #endif // TELLOCOMMANDWORKER_H
