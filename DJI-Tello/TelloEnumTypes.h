@@ -8,7 +8,8 @@ enum class TelloResponse {
     ERROR_NOT_JOYSTICK, // Wait untill send next command
     ERROR_NO_VALID_IMU, // Maybe had some changes on room light
     OUT_OF_RANGE,       // If the range is like 20-500 and you give a number out of the range
-    UNDEFINED           // Used while I don't discover all of error types
+    UNDEFINED,          // Used while I don't discover all of error types
+    TIMEOUT
 };
 
 enum class TelloAlerts {

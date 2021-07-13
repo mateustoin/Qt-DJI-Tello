@@ -9,7 +9,7 @@ Page {
         interval: 15000
         repeat: true
 
-        onTriggered: Tello.sendCommand("command")
+        onTriggered: Tello.sendCommandWithProcess("command")
     }
 
     Connections{
@@ -126,7 +126,7 @@ Page {
                 onClicked: {
                     //Tello.connectTello()
                     //commandTimer.start()
-                    Tello.sendCommand("command");
+                    Tello.sendCommandWithProcess("command");
                 }
             }
         }
@@ -172,7 +172,7 @@ Page {
 
                 onClicked: {
                     //console.log(Tello.send_control_command("streamon"));
-                    Tello.sendCommand("streamon");
+                    Tello.sendCommandWithProcess("streamon");
                 }
             }
         }
@@ -211,7 +211,7 @@ Page {
 
                 onClicked: {
                     //Tello.send_control_command(inputName.text);
-                    Tello.sendCommand(inputName.text);
+                    Tello.sendCommandWithProcess(inputName.text);
                 }
             }
 
@@ -235,7 +235,7 @@ Page {
                     Keys.onReturnPressed: {
                         if (event.key === Qt.Key_Return) {
                             //console.log("Enter pressionado")
-                            Tello.sendCommand(inputName.text);
+                            Tello.sendCommandWithProcess(inputName.text);
                             inputName.clear()
                         }
                     }

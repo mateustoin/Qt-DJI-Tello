@@ -7,6 +7,7 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+        commandprocessor.cpp \
         main.cpp \
         src/lib/third_operation/csvhandler.cpp \
         src/lib/third_operation/framedecoder.cpp \
@@ -43,6 +44,7 @@ include(external/qtcsv/qtcsv.pri)
 
 HEADERS += \
     TelloEnumTypes.h \
+    commandprocessor.h \
     src/include/third_operation/csvhandler.h \
     src/include/third_operation/framedecoder.h \
     tello.h \
