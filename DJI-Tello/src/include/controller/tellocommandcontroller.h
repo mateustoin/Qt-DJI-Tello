@@ -46,6 +46,8 @@ signals:
     void connectionWithTelloFailed();
     void connectionWithSocketFailed();
 
+    void readyToNextCommand();
+
 private:
     QThread commandWorkerThread;
     TelloCommandWorker *commandWorker;

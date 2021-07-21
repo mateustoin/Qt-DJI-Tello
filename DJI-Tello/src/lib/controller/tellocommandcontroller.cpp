@@ -25,6 +25,8 @@ TelloCommandController::TelloCommandController(QObject *parent) : QObject(parent
             this, &TelloCommandController::sendCommand, Qt::QueuedConnection);
     connect(this, &TelloCommandController::sendCommandWithProcess,
             commandProcessor, &CommandProcessor::startCommandAction, Qt::QueuedConnection);
+    connect(this, &TelloCommandController::readyToNextCommand,
+            commandProcessor, &CommandProcessor::finishProcessCommand, Qt::QueuedConnection);
     start();
 }
 
@@ -115,6 +117,7 @@ void TelloCommandController::verifyOkMatchResponse(QString response) {
     }else{
         qInfo() << "[OK] Command sent[" << this->currentCommand << "]: " << response;
         this->currentCommand = "";
+        emit readyToNextCommand();
     }
 }
 

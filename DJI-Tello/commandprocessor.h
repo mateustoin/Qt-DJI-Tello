@@ -12,12 +12,11 @@ public:
 
 public slots:
     void startCommandAction(QString);
+    void finishProcessCommand();
 
 private slots:
     bool isReadyForNextCommand();
     void processTypeOfCommand(QString);
-
-    void finishProcessCommand();
 
     void setCommand(QString);
     void fastCommand(QString);
