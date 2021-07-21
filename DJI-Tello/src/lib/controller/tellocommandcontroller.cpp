@@ -22,8 +22,8 @@ TelloCommandController::TelloCommandController(QObject *parent) : QObject(parent
             this, &TelloCommandController::processResponseSignal, Qt::QueuedConnection);
 
     connect(commandProcessor, &CommandProcessor::startCommand,
-            this, &TelloCommandController::sendCommand, Qt::QueuedConnection);
-    connect(this, &TelloCommandController::sendCommandWithProcess,
+            this, &TelloCommandController::sendDirectCommand, Qt::QueuedConnection);
+    connect(this, &TelloCommandController::sendProcessCommand,
             commandProcessor, &CommandProcessor::startCommandAction, Qt::QueuedConnection);
     connect(this, &TelloCommandController::readyToNextCommand,
             commandProcessor, &CommandProcessor::finishProcessCommand, Qt::QueuedConnection);
@@ -128,6 +128,7 @@ void TelloCommandController::verifyValueMatchResponse(QString response) {
     }else{
         qInfo() << "[VALUE] Command sent[" << this->currentCommand << "]: " << response;
         this->currentCommand = "";
+        emit readyToNextCommand();
     }
 }
 
@@ -154,11 +155,11 @@ void TelloCommandController::disconnectTelloStatusConnection() {
     emit connectionWithTelloFailed();
 }
 
-void TelloCommandController::sendCommand(QString command) {
+void TelloCommandController::sendDirectCommand(QString command) {
     this->currentCommand = command;
     emit sendCommandWithoutReturn(command);
 }
 
-//void TelloCommandController::sendCommandWithProcess(QString command) {
-//    //commandProcessor->startCommandAction(command);
-//}
+void TelloCommandController::sendCommandWithProcess(QString command) {
+    emit sendProcessCommand(command);
+}

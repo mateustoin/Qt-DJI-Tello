@@ -35,31 +35,39 @@ private slots:
     void verifyValueMatchResponse(QString);
 
 public slots:
-    void sendCommand(QString);
+    void sendDirectCommand(QString);        // Send direct command to worker
+    void sendCommandWithProcess(QString);   // Send command using process class
 
 signals:
+    // Internal command signals used by functions
     void sendCommandToWorker(QString);
     void sendCommandWithoutReturn(QString);
-    void sendCommandWithProcess(QString);
+    void sendProcessCommand(QString);
 
+    // State signals used by the interface
     void connectionWithTelloEstablished();
     void connectionWithTelloFailed();
     void connectionWithSocketFailed();
 
+    // Operational signals used by other classes
     void readyToNextCommand();
 
 private:
+    // Worker thread creation
     QThread commandWorkerThread;
     TelloCommandWorker *commandWorker;
 
+    // Current command storage
     QString currentCommand;
     QQueue<QString> commandQueue;
     //QPair<QString, TelloResponse> commandPair;
+
 
     bool telloIsConnected;
     bool videoIsStreaming;
     bool telloIsFlying;
 
+    // Command processor thread creation
     CommandProcessor *commandProcessor;
     QThread processorThread;
 };

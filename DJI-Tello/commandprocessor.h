@@ -4,8 +4,7 @@
 #include <QObject>
 #include <QTimer>
 
-class CommandProcessor : public QObject
-{
+class CommandProcessor : public QObject {
     Q_OBJECT
 public:
     explicit CommandProcessor(QObject *parent = nullptr);
