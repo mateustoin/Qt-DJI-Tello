@@ -55,7 +55,7 @@ void CommandProcessor::setCommand(QString command) {
      * speed
      */
     emit startCommand(command);
-    commandTimer->start(1000); // Wait 1 second to process
+    commandTimer->start(T_AVERAGE_SPEED); // Wait 1 second to process
 }
 
 void CommandProcessor::fastCommand(QString command) {
@@ -65,7 +65,7 @@ void CommandProcessor::fastCommand(QString command) {
      * all read commands (battery?, speed?, time?, height?, temp?, etc)
      */
     emit startCommand(command);
-    commandTimer->start(1000); // Wait 1 second to process
+    commandTimer->start(T_AVERAGE_SPEED); // Wait 1 second to process
 }
 
 void CommandProcessor::slowCommand(QString command) {
@@ -74,15 +74,15 @@ void CommandProcessor::slowCommand(QString command) {
      * up/down/left/right, forward/back, flip
      */
     emit startCommand(command);
-    commandTimer->start(500); // Wait 1 second to process
+    commandTimer->start(T_FAST_SPEED); // Wait 0.5 second to process
 }
 
 void CommandProcessor::takeoff() {
     emit startCommand("takeoff");
-    commandTimer->start(10000); // Wait 10 seconds to process takeoff
+    commandTimer->start(T_SLOW_SPEED); // Wait 10 seconds to process takeoff
 }
 
 void CommandProcessor::land() {
     emit startCommand("land");
-    commandTimer->start(10000); // Wait 10 seconds to process land
+    commandTimer->start(T_SLOW_SPEED); // Wait 10 seconds to process land
 }

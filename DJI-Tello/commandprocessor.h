@@ -31,6 +31,11 @@ signals:
 private:
     QTimer *commandTimer;
     bool commandReady;
+
+    // Constant variables
+    const unsigned int T_FAST_SPEED = 500; // 0.5 seconds
+    const unsigned int T_AVERAGE_SPEED = 1000;
+    const unsigned int T_SLOW_SPEED = 10000;
 };
 
 #endif // COMMANDPROCESSOR_H
