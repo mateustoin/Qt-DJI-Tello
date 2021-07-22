@@ -7,8 +7,6 @@ TelloCommandController::TelloCommandController(QObject *parent) : QObject(parent
     commandWorker = new TelloCommandWorker();
     commandWorker->moveToThread(&commandWorkerThread);
 
-    commandProcessor = new CommandProcessor();
-    commandProcessor->moveToThread(&processorThread);
     connect(this, &TelloCommandController::sendCommandToWorker,
             commandWorker, &TelloCommandWorker::send_control_command, Qt::QueuedConnection);
     connect(this, &TelloCommandController::sendCommandWithoutReturn,
@@ -20,6 +18,10 @@ TelloCommandController::TelloCommandController(QObject *parent) : QObject(parent
             this, &TelloCommandController::processAlertSignal, Qt::QueuedConnection);
     connect(commandWorker, &TelloCommandWorker::responseSignal,
             this, &TelloCommandController::processResponseSignal, Qt::QueuedConnection);
+
+
+    commandProcessor = new CommandProcessor();
+    commandProcessor->moveToThread(&processorThread);
 
     connect(commandProcessor, &CommandProcessor::startCommand,
             this, &TelloCommandController::sendDirectCommand, Qt::QueuedConnection);
