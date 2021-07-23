@@ -140,7 +140,7 @@ Page {
 
             Text {
                 id: command
-                text: qsTr("Connect State Server")
+                text: qsTr("Close Video Stream")
                 anchors.centerIn: parent
             }
 
@@ -148,8 +148,7 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    TelloState.connectStateServer();
-                    //statusTimer.start();
+                    TelloVideo.closeTelloVideoStream();
                 }
             }
         }
@@ -194,8 +193,11 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    //console.log(TelloVideo.startVideoStream());
-                    console.log(TelloVideo.openTelloVideoStream());
+                    if (!TelloVideo.videoIsOpen()){
+                        TelloVideo.openTelloVideoStream();
+                    }else{
+                        TelloVideo.closeTelloVideoStream();
+                    }
                 }
             }
         }

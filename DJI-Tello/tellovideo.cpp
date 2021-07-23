@@ -42,7 +42,8 @@ void TelloVideo::getDecodeResultEveryNoFrames(int no_frames) {
 
     QString result = "";
     if (frameCounter%no_frames == 0){
-         result = decoder.decodeFrame(currentOpencvFrame);
+         //result = decoder.decodeFrame(currentOpencvFrame);
+        decoder.decodeFrame(currentOpencvFrame);
 
          if (result != ""){
              emit newDecodeResult(result);
