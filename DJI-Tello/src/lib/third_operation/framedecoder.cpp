@@ -1,10 +1,10 @@
 #include "src/include/third_operation/framedecoder.h"
 
 FrameDecoder::FrameDecoder(QObject *parent) : QObject(parent) {
-    decoderConfig();
+    //startDecoderConfig();
 }
 
-QString FrameDecoder::decodeFrame(cv::Mat frame) {
+void FrameDecoder::decodeFrame(cv::Mat frame) {
     qimageFrame = QImage((uchar*) frame.data,
                                   frame.cols,
                                   frame.rows,
@@ -12,11 +12,12 @@ QString FrameDecoder::decodeFrame(cv::Mat frame) {
                                   QImage::Format_RGB888);
 
     QString result = decoder.decodeImage(qimageFrame);
-
-    return result;
+    if (result != ""){
+        qInfo() << "Frame decodificado: " << result;
+    }
 }
 
-void FrameDecoder::decoderConfig() {
+void FrameDecoder::startDecoderConfig() {
     decoder.setDecoder( QZXing::DecoderFormat_CODE_128);
     decoder.setSourceFilterType(QZXing::SourceFilter_ImageNormal);
     decoder.setTryHarderBehaviour(QZXing::TryHarderBehaviour_ThoroughScanning | QZXing::TryHarderBehaviour_Rotate);

@@ -4,7 +4,11 @@
 #include <QObject>
 #include <QDebug>
 #include <QThread>
+#include "opencv2/opencv.hpp"
 #include <src/include/worker/tellovideoworker.h>
+#include <src/include/third_operation/framedecoder.h>
+
+Q_DECLARE_METATYPE(cv::Mat)
 
 class TelloVideoController : public QObject {
     Q_OBJECT
@@ -30,6 +34,9 @@ signals:
 private:
     QThread telloVideoThread;
     TelloVideoWorker *videoWorker;
+
+    QThread frameDecoderThread;
+    FrameDecoder *frameDecoder;
 
     bool isVideoOpen;
 };

@@ -4,6 +4,7 @@
 #include <QObject>
 // https://github.com/ftylitak/qzxing
 #include <QZXing.h>
+#include <QDebug>
 #include "opencv2/opencv.hpp"
 
 class FrameDecoder : public QObject {
@@ -15,13 +16,15 @@ signals:
     void imageDecoded();
 
 public slots:
-    QString decodeFrame(cv::Mat);
+    void startDecoderConfig();
+    void decodeFrame(cv::Mat);
+
+//private slots:
+
 
 private:
     QZXing decoder;
     QImage qimageFrame;
-
-    void decoderConfig();
 };
 
 #endif // FRAMEDECODER_H

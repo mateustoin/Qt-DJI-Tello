@@ -14,6 +14,15 @@ TelloVideoController::TelloVideoController(QObject *parent) : QObject(parent),
             this, &TelloVideoController::setVideoOpen, Qt::QueuedConnection);
     connect(videoWorker, &TelloVideoWorker::videoClosed,
             this, &TelloVideoController::setVideoClose, Qt::QueuedConnection);
+
+    frameDecoder = new FrameDecoder();
+    frameDecoder->moveToThread(&frameDecoderThread);
+    qRegisterMetaType< cv::Mat >("cv::Mat");
+
+    connect(&frameDecoderThread, &QThread::started,
+            frameDecoder, &FrameDecoder::startDecoderConfig, Qt::QueuedConnection);
+    connect(videoWorker, &TelloVideoWorker::newFrameToDecode,
+            frameDecoder, &FrameDecoder::decodeFrame);
     start();
 }
 
@@ -26,6 +35,7 @@ TelloVideoController::~TelloVideoController() {
 
 void TelloVideoController::start() {
     telloVideoThread.start();
+    frameDecoderThread.start();
 }
 
 void TelloVideoController::openTelloVideoStream() {

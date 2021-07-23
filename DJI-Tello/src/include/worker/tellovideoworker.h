@@ -19,6 +19,7 @@ public slots:
 private slots:
     void escapeKeyPressed();
     //void getDecodeResultEveryNoFrames(int);
+    void emitFrameEveryNoFrames();
     bool startVideoConfig();
     void processVideoLoop();
 
@@ -30,11 +31,13 @@ private:
     QString videoUdpURL;
 
     quint32 frameCounter;
+    const int NO_FRAMES_TO_SEND = 5;
 
 signals:
     void videoOpened();
     void videoClosed();
     void videoCantOpen();
+    void newFrameToDecode(cv::Mat);
 };
 
 #endif // TELLOVIDEOWORKER_H
