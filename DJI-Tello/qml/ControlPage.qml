@@ -253,7 +253,7 @@ Page {
             MouseArea{
                 anchors.fill: parent
 
-                onClicked: TelloState.finishCsvCollect()
+                onClicked: TelloState.finishDataCollect()
             }
         }
     }

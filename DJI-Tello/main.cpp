@@ -7,6 +7,7 @@
 #include <tello.h>
 
 #include <src/include/controller/tellocommandcontroller.h>
+#include <src/include/controller/tellostatecontroller.h>
 
 #include <QThread>
 #include <QQmlContext>
@@ -23,21 +24,11 @@ int main(int argc, char *argv[]) {
     QThread thread_video, thread_command, thread_state;
 
     //TelloCommand *tello = TelloCommand::instance();
-    TelloState *telloState = TelloState::instance();
+    //TelloState *telloState = TelloState::instance();
     TelloVideo *telloVideo = TelloVideo::instance();
 
-    TelloCommandController *telloCommand = new TelloCommandController;
-//    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
-//    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
-//    qInfo() << "TelloState rodando na thread: " << telloState->thread();
-
-//    tello->moveToThread(&thread_command);
-//    telloState->moveToThread(&thread_state);
-//    telloVideo->moveToThread(&thread_video);
-
-//    qInfo() << "TelloCommand rodando na thread: " << tello->thread();
-//    qInfo() << "TelloVideo rodando na thread: " << telloVideo->thread();
-//    qInfo() << "TelloState rodando na thread: " << telloState->thread();
+    TelloCommandController *telloCommand = new TelloCommandController();
+    TelloStateController *telloState = new TelloStateController();
 
     //engine.setObjectOwnership(tello, QQmlEngine::CppOwnership);
     engine.rootContext()->setContextProperty("Tello", telloCommand);

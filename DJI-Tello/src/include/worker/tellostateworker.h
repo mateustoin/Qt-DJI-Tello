@@ -13,10 +13,7 @@ public:
 
 public slots:
     void startStateConfig();
-    void connectStateServer(); // This is becoming startStateConfig
-
     QString getRawState();
-    QHash<QString, QString> getStateHashTable();
 
 private slots:
     void readState();

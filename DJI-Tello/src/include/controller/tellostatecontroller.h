@@ -11,11 +11,12 @@ class TelloStateController : public QObject {
     Q_OBJECT
 public:
     explicit TelloStateController(QObject *parent = nullptr);
+    ~TelloStateController();
 
 public slots:
     void start();
-    void finishCsvCollect();
 
+    QHash<QString, QString> getStateHashTable();
     int get_pitch();
     int get_roll();
     int get_yaw();
@@ -33,10 +34,18 @@ public slots:
     float get_acceleration_x();
     float get_acceleration_y();
     float get_acceleration_z();
-    void stateTester();
+    //void stateTester();
+
+signals:
+    void finishDataCollect();
+
+private slots:
+    void updateStateTable(QHash<QString, QString>);
 
 private:
-    QThread *csvThread;
+    QHash<QString, QString> stateTable;
+
+    QThread csvThread;
     CsvHandler *csv;
 
     QThread stateWorkerThread;

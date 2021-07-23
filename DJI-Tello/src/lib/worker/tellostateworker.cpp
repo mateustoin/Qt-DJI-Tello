@@ -18,19 +18,15 @@ void TelloStateWorker::startStateConfig() {
         emit stateServerBindError();
     }else{
         connect(telloStateSocketServer, &QUdpSocket::readyRead, this, &TelloStateWorker::readState);
-        connect(this, &TelloState::recievedNewState, this, &TelloState::stateTableConstruction);
+        connect(this, &TelloStateWorker::receivedNewStateFromTello, this, &TelloStateWorker::stateTableConstruction);
         //csv.startDataCollect();
-        connect(this, &TelloState::stateTableUpdated, &csv, &CsvHandler::collectData);
+        //connect(this, &TelloStateWorker::stateTableUpdated, &csv, &CsvHandler::collectData);
         emit stateServerStarted();
     }
 }
 
 QString TelloStateWorker::getRawState() {
     return currentRawState;
-}
-
-QHash<QString, QString> TelloStateWorker::getStateHashTable() {
-
 }
 
 void TelloStateWorker::readState() {
