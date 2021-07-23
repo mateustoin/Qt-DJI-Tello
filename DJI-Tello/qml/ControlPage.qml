@@ -194,7 +194,8 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    console.log(TelloVideo.startVideoStream());
+                    //console.log(TelloVideo.startVideoStream());
+                    console.log(TelloVideo.openTelloVideoStream());
                 }
             }
         }
