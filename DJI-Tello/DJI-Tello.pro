@@ -11,6 +11,7 @@ SOURCES += \
         main.cpp \
         src/lib/third_operation/csvhandler.cpp \
         src/lib/third_operation/framedecoder.cpp \
+        src/lib/third_operation/picturehandler.cpp \
         tello.cpp \
         tellocommand.cpp \
         src/lib/controller/tellocommandcontroller.cpp \
@@ -47,6 +48,7 @@ HEADERS += \
     commandprocessor.h \
     src/include/third_operation/csvhandler.h \
     src/include/third_operation/framedecoder.h \
+    src/include/third_operation/picturehandler.h \
     tello.h \
     tellocommand.h \
     src/include/controller/tellocommandcontroller.h \

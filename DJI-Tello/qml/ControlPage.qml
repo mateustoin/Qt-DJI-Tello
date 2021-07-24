@@ -140,7 +140,7 @@ Page {
 
             Text {
                 id: command
-                text: qsTr("Close Video Stream")
+                text: qsTr("Take Picture")
                 anchors.centerIn: parent
             }
 
@@ -148,7 +148,7 @@ Page {
                 anchors.fill: parent
 
                 onClicked: {
-                    TelloVideo.closeTelloVideoStream();
+                    TelloVideo.takePicture();
                 }
             }
         }

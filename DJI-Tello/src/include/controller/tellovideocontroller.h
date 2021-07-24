@@ -7,6 +7,7 @@
 #include "opencv2/opencv.hpp"
 #include <src/include/worker/tellovideoworker.h>
 #include <src/include/third_operation/framedecoder.h>
+#include <src/include/third_operation/picturehandler.h>
 
 Q_DECLARE_METATYPE(cv::Mat)
 
@@ -21,6 +22,7 @@ public slots:
 
     void openTelloVideoStream();
     void closeTelloVideoStream();
+    void takePicture();
     bool videoIsOpen();
 
 private slots:
@@ -30,6 +32,7 @@ private slots:
 signals:
     void openVideoStream();
     void closeVideoStream();
+    void takePictureFromVideoStream();
 
 private:
     QThread telloVideoThread;
@@ -37,6 +40,9 @@ private:
 
     QThread frameDecoderThread;
     FrameDecoder *frameDecoder;
+
+    QThread pictureHandlerThread;
+    PictureHandler *pictureHandler;
 
     bool isVideoOpen;
 };

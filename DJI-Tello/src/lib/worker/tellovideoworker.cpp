@@ -26,6 +26,8 @@ void TelloVideoWorker::escapeKeyPressed() {
 }
 
 void TelloVideoWorker::emitFrameEveryNoFrames() {
+    emit newFrame(*currentOpencvFrame);
+
     if (frameCounter%NO_FRAMES_TO_SEND == 0){
         emit newFrameToDecode(*currentOpencvFrame);
         frameCounter = 0;
@@ -35,15 +37,19 @@ void TelloVideoWorker::emitFrameEveryNoFrames() {
 
 void TelloVideoWorker::closeVideoStream() {
     captureOpened = false;
+    qInfo() << "Destruindo todas as janelas";
     videoCapture->release();
     cv::destroyWindow("Video from Tello");
     cv::destroyAllWindows();
     emit videoClosed();
 }
 
+void TelloVideoWorker::setCaptureOpened(bool state) {
+    this->captureOpened = state;
+}
+
 bool TelloVideoWorker::startVideoConfig() {
     videoCapture->open(videoUdpURL.toStdString(), cv::CAP_GSTREAMER);
-    qInfo() << "Depois de abrir a captura de video";
     cv::namedWindow("Video from Tello", CV_WINDOW_AUTOSIZE);
 
     if (!videoCapture->isOpened()) {
@@ -61,7 +67,6 @@ void TelloVideoWorker::processVideoLoop() {
         videoCapture->read(*currentOpencvFrame);
         imshow("Video from Tello", *currentOpencvFrame);
         emitFrameEveryNoFrames();
-        //getDecodeResultEveryNoFrames(20);
         //escapeKeyPressed();
     }
 }

@@ -23,19 +23,32 @@ TelloVideoController::TelloVideoController(QObject *parent) : QObject(parent),
             frameDecoder, &FrameDecoder::startDecoderConfig, Qt::QueuedConnection);
     connect(videoWorker, &TelloVideoWorker::newFrameToDecode,
             frameDecoder, &FrameDecoder::decodeFrame);
+
+    pictureHandler = new PictureHandler();
+    pictureHandler->moveToThread(&pictureHandlerThread);
+
+    connect(this, &TelloVideoController::takePictureFromVideoStream,
+            pictureHandler, &PictureHandler::saveCurrentFrameOnDisk, Qt::QueuedConnection);
+    connect(videoWorker, &TelloVideoWorker::newFrame,
+            pictureHandler, &PictureHandler::updateCurrentFrame, Qt::QueuedConnection);
+
     start();
 }
 
 TelloVideoController::~TelloVideoController() {
-    qInfo() << "Destrutor de TelloVideoController acionado!";
-
     telloVideoThread.quit();
+    frameDecoderThread.quit();
+    pictureHandlerThread.quit();
+
     telloVideoThread.wait();
+    frameDecoderThread.wait();
+    pictureHandlerThread.wait();
 }
 
 void TelloVideoController::start() {
     telloVideoThread.start();
     frameDecoderThread.start();
+    pictureHandlerThread.start();
 }
 
 void TelloVideoController::openTelloVideoStream() {
@@ -44,6 +57,11 @@ void TelloVideoController::openTelloVideoStream() {
 
 void TelloVideoController::closeTelloVideoStream() {
     emit closeVideoStream();
+    videoWorker->setCaptureOpened(false);
+}
+
+void TelloVideoController::takePicture() {
+    emit takePictureFromVideoStream();
 }
 
 bool TelloVideoController::videoIsOpen() {
